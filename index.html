@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piquenique Xadrez — Inglês 5º ano</title>
+<style>
+:root{
+  --fundo:#fff8ec; --papel:#fffdf8; --pipa:#f39c12; --pipa2:#b86e00; --sol:#f6b93b; --sol2:#c98a0b;
+  --rabiola:#e05a47; --rabiola2:#a8352a; --linha-v:#43a047; --linha-v2:#2e7d32; --anil:#e05a47; --anil2:#a8352a;
+  --tinta:#3a2e28; --cinza:#7a6c62; --linha:#f1dccb; --ok:#2e9d4f; --erro:#d9362b; --ceu:#4a90d9;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:var(--fundo);color:var(--tinta);font-size:18px;line-height:1.5}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+.topo{background:linear-gradient(180deg,#cfe6ff 0%,#eaf5ff 60%,#fff8ec 100%);text-align:center;padding:12px 10px 8px;border-bottom:4px dashed var(--anil)}
+.topo h1{margin:4px 0;font-size:1.8em;color:var(--anil2);letter-spacing:.5px}
+.topo p{margin:2px 0;color:#5e4d42;font-size:.9em}
+.toalha{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:14px 6px 12px;border-bottom:3px solid #e9c9b4;
+  background-color:#fff;background-image:linear-gradient(90deg,rgba(224,90,71,.28) 50%,transparent 50%),linear-gradient(rgba(224,90,71,.28) 50%,transparent 50%);background-size:36px 36px}
+.prato{width:46px;display:flex;flex-direction:column;align-items:center;transition:transform .8s ease}
+.prato .disco{width:40px;height:40px;border-radius:50%;background:#f4f1ee;border:3px dashed #c9bdb3;display:flex;align-items:center;justify-content:center;font-size:1.25em;filter:grayscale(1);opacity:.55}
+.prato small{font-size:.62em;color:#5e4d42;background:#fffc;border-radius:6px;padding:0 4px;margin-top:2px}
+.prato.servido{transform:translateY(-4px) scale(1.08)}
+.prato.servido .disco{filter:none;opacity:1;background:#fff;border:3px solid var(--c);box-shadow:0 3px 0 #0002}
+nav.abas{position:sticky;top:0;z-index:20;background:#fff;box-shadow:0 2px 8px #0001;display:flex;gap:6px;overflow-x:auto;padding:8px}
+nav.abas button{flex:0 0 auto;border:2px solid var(--linha);background:#fff;border-radius:14px;padding:8px 12px;font-weight:bold;color:var(--tinta);position:relative}
+nav.abas button.ativa{background:var(--anil);border-color:var(--anil2);color:#fff}
+nav.abas button.trancada{background:#eee;color:#999;border-color:#ddd}
+nav.abas button .selo{position:absolute;top:-8px;right:-6px;background:var(--sol);color:#5a3d00;border-radius:10px;font-size:.62em;padding:1px 6px}
+main{max-width:860px;margin:0 auto;padding:14px 12px 80px}
+section.aba{display:none}
+section.aba.ativa{display:block;animation:entra .35s ease}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:#fff;border-radius:18px;padding:16px 18px;margin:14px 0;box-shadow:0 3px 0 var(--linha),0 4px 14px #0000000d;border:2px solid var(--linha)}
+h2{color:var(--anil2);margin:.2em 0 .4em}
+h3{margin:.3em 0}
+.sub{color:var(--cinza);font-size:.88em}
+.btn{border:none;border-radius:14px;padding:10px 16px;font-weight:bold;color:#fff;background:var(--linha-v);box-shadow:0 3px 0 var(--linha-v2);margin:4px 2px}
+.btn:disabled{background:#c9c4cc;box-shadow:0 3px 0 #a9a3ad;cursor:not-allowed}
+.btn.fio{background:var(--anil);box-shadow:0 3px 0 var(--anil2)}
+.btn.faisca{background:var(--pipa);box-shadow:0 3px 0 var(--pipa2)}
+.btn.claro{background:#fff;color:var(--tinta);border:2px solid var(--linha);box-shadow:none}
+.trilha{display:grid;gap:10px}
+.etapa{display:flex;gap:12px;align-items:center;border-radius:16px;padding:12px 14px;border:2px solid var(--linha);background:#fff;text-align:left;width:100%;color:var(--tinta)}
+.etapa .ic{font-size:1.8em}
+.etapa.trancada{background:#f1f0f2;color:#8d8892;filter:grayscale(1)}
+.etapa.feita{border-color:var(--ok)}
+.etapa.nova{animation:brilho 1.4s ease 3;border-color:var(--sol)}
+@keyframes brilho{0%,100%{box-shadow:0 0 0 0 #ffc83d00}50%{box-shadow:0 0 0 8px #ffc83d88}}
+.tag{display:inline-block;border-radius:10px;padding:1px 8px;font-size:.75em;font-weight:bold;margin-left:4px}
+.tag.ok{background:#dff5e8;color:var(--ok)}
+.tag.novo{background:#fff1c2;color:#7a5600}
+.tag.lock{background:#e7e5ea;color:#6b6670}
+.barra{height:14px;background:#f3e6dc;border-radius:10px;overflow:hidden;margin:6px 0}
+.barra>div{height:100%;background:linear-gradient(90deg,var(--anil),var(--pipa),var(--rabiola));width:0;transition:width .4s}
+.bloco{border-left:8px solid var(--c,var(--anil))}
+.bloco.fechado .corpo{display:none}
+.bloco .cab{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer}
+.bloco.trancado{opacity:.55}
+.caixa{background:#fff8e3;border:2px dashed var(--sol);border-radius:12px;padding:8px 12px;margin:10px 0;font-size:.92em}
+.regra{background:#eef6ff;border:2px solid #cfe3fb;border-radius:12px;padding:8px 12px;margin:8px 0}
+.exemplo{background:#effaf3;border:2px solid #c7ecd6;border-radius:12px;padding:8px 12px;margin:8px 0}
+.alerta{background:#fff0f4;border:2px solid #ffc2d4;border-radius:12px;padding:8px 12px;margin:8px 0}
+.fala{background:#fff4ea;border-left:5px solid var(--pipa);border-radius:0 12px 12px 0;padding:6px 12px;margin:8px 0;font-style:italic}
+.balao{background:#fff;border:2px solid #d9e4ee;border-radius:16px;padding:8px 12px;margin:8px 0;display:flex;gap:8px;align-items:flex-start}
+.balao .quem{font-size:1.4em}
+.en{font-weight:bold;color:#1f4f86;white-space:normal}
+.som{border:none;background:#e3f0ff;border-radius:50%;width:30px;height:30px;font-size:.8em;margin-left:3px;vertical-align:middle;line-height:30px;padding:0}
+.som:hover{background:#cfe3fb}
+.quadro{width:100%;border-collapse:collapse;margin:8px 0;font-size:.95em}
+.quadro td,.quadro th{border:2px solid #d8e6f2;padding:6px 8px;vertical-align:top}
+.quadro th{background:#e05a47;color:#fff}
+.quadro td.lado{background:#fdece6;color:var(--anil2);font-weight:bold;text-align:center}
+.pergunta{margin:14px 0 6px;padding-top:10px;border-top:2px dotted var(--linha)}
+.opcoes{display:grid;gap:6px}
+.op{text-align:left;border:2px solid var(--linha);background:#fff;border-radius:12px;padding:8px 12px;color:var(--tinta)}
+.op:hover:not(:disabled){border-color:var(--anil)}
+.op.certa{background:#e3f7ea;border-color:var(--ok);font-weight:bold}
+.op.errada{background:#fde6e4;border-color:var(--erro)}
+.op.cinza{background:#f2f1f3;color:#777}
+.op.sel{background:#fff0dc;border-color:var(--pipa);font-weight:bold}
+.op:disabled{cursor:default}
+.fb{border-radius:12px;padding:8px 12px;margin-top:6px;font-size:.92em;animation:entra .3s}
+.fb.ok{background:#e3f7ea}
+.fb.no{background:#fff0e0}
+.estrelas{font-size:1.2em}
+.galeria{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0}
+.galeria .item{background:#fff;border:2px solid var(--linha);border-radius:12px;padding:8px;text-align:center;font-size:.9em}
+.mapa{position:relative}
+.mapa .centro{background:var(--anil);color:#fff;text-align:center;border-radius:50px;padding:14px;font-weight:bold;font-size:1.15em;margin:6px auto 14px;max-width:520px;box-shadow:0 4px 0 var(--anil2);border:3px dashed #fff}
+.ramos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.ramo{border-radius:16px;padding:10px 12px;background:#fff;border:3px dashed var(--c);transition:filter .6s}
+.ramo h4{margin:0 0 6px;color:var(--c)}
+.mapa.incompleto .ramo{filter:saturate(.25)}
+.mapa.completo .ramo{animation:revela .8s ease}
+@keyframes revela{from{transform:scale(.96)}to{transform:none}}
+.no{margin:6px 0;font-size:.95em}
+.lacuna{display:inline-flex;gap:4px;vertical-align:middle;flex-wrap:wrap}
+.lacuna button{border:2px dashed var(--anil);background:#eef6ff;border-radius:10px;padding:2px 10px;font-weight:bold;color:var(--anil2)}
+.lacuna.feita span.enc{display:inline-block;background:#e3f7ea;border:2px solid var(--ok);border-radius:10px;padding:2px 10px;font-weight:bold;color:var(--ok)}
+.lacuna button.erro{border-color:var(--erro);background:#fde6e4;color:var(--erro);animation:balanca .45s}
+@keyframes balanca{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.contador{position:sticky;top:58px;z-index:5;background:var(--pipa);color:#fff;border-radius:14px;padding:8px 12px;text-align:center;font-weight:bold;margin:8px 0}
+.vf-frase{font-size:1.2em;font-weight:bold;text-align:center;margin:14px 0;min-height:3em}
+.vf-bts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.vf-bts .btn{font-size:1.1em;padding:12px 22px}
+.comp{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.col{border-radius:14px;padding:10px;border:2px dashed var(--c);background:#fff}
+.col h4{margin:0 0 4px;color:var(--c);text-align:center}
+.col ul{margin:4px 0;padding-left:18px;font-size:.95em}
+.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.palavra{background:#fff;border:2px solid var(--linha);border-radius:12px;padding:8px 10px;font-size:.92em}
+.palavra b{color:var(--anil2)}
+.postits{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.postit{background:#fff59a;padding:12px;border-radius:4px;box-shadow:2px 3px 6px #0002;transform:rotate(-1deg);font-size:.95em}
+.postit:nth-child(even){transform:rotate(1.2deg);background:#ffe0ec}
+.relampago button{width:100%;text-align:left}
+.resp-oculta{display:none;margin:4px 0 8px 10px;color:var(--linha-v2);font-weight:bold}
+.fundo-modal{position:fixed;inset:0;background:#26323dcc;display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.fundo-modal.aberto{display:flex}
+.modal{background:#fff;border-radius:20px;max-width:440px;width:100%;padding:20px;text-align:center;animation:entra .3s}
+.painel-salvar{font-size:.85em;color:var(--cinza)}
+input.codigo{font-size:1em;padding:8px 10px;border-radius:12px;border:2px solid var(--linha);width:170px;text-transform:uppercase}
+table.rel{width:100%;border-collapse:collapse;font-size:.88em}
+table.rel td,table.rel th{border-bottom:1px solid #eee;padding:5px;text-align:left;vertical-align:top}
+.gab-q{border-top:2px dotted var(--linha);padding-top:8px;margin-top:10px}
+.gab-op{border-radius:10px;padding:5px 10px;margin:4px 0;font-size:.92em}
+.gab-op.certa{background:#e3f7ea;border:2px solid var(--ok)}
+.gab-op.cinza{background:#f2f1f3;color:#666}
+.gab-op.marcada{outline:3px solid var(--anil)}
+.placar-final{text-align:center;font-size:1.3em}
+.trofeu{font-size:3em}
+footer{text-align:center;color:var(--cinza);font-size:.85em;padding:20px}
+@media (max-width:620px){body{font-size:16.5px}.topo h1{font-size:1.4em}.prato{width:38px}.prato .disco{width:34px;height:34px;font-size:1.05em}}
+
+</style>
+</head>
+<body>
+<header class="topo">
+  <div style="font-size:2em">🧺🐜🍯🧀🍄</div>
+  <h1>Piquenique Xadrez</h1>
+  <p><b>Inglês · 5º ano</b> · Prova de 18/11 (quarta-feira)</p>
+  <p>Unit 7: <i>Food Matters</i> — there's / there are, too much / too many, enough, Phonics e Foods</p>
+</header>
+<div class="toalha" id="toalha" title="Cada prato aparece na toalha quando você termina as perguntas daquela cestinha na Leitura Guiada"></div>
+<nav class="abas" id="abas"></nav>
+<main>
+<!-- ============ INÍCIO ============ -->
+<section class="aba" id="sec-inicio">
+  <div class="card">
+    <h2>👋 Hello, jovem aprendiz!</h2>
+    <p>Eu sou a <b>Migalha</b> 🐜, uma formiguinha que adora piquenique. A toalha xadrez lá em cima ainda está <b>vazia</b>... Vamos enchê-la de comida?</p>
+    <p>Neste kit temos <b>11 cestinhas</b>. Cada cestinha que você termina coloca um prato na toalha! 🧺</p>
+    <p class="sub">🔊 Toque no alto-falante ao lado das palavras e frases em inglês para ouvir a pronúncia (funciona melhor no Chrome ou no Safari).</p>
+  </div>
+  <div class="card">
+    <h2>📋 O que vamos estudar</h2>
+    <p><b>Unit 7 — <i>Food Matters</i></b></p>
+    <ul>
+      <li><b>Foods</b>: as comidas da Unit 7 (Student's Book p. 80 e Workbook p. 52)</li>
+      <li><b>There's / There are / There isn't / There aren't</b>, com <i>some</i> e <i>any</i> (Student's Book p. 80, Workbook p. 52 e caderno)</li>
+      <li><b>Countable</b> e <b>uncountable nouns</b> (caderno)</li>
+      <li><b>Too much / Too many / Enough</b> (Student's Book p. 81, Workbook p. 53 e caderno)</li>
+      <li><b>Phonics</b>: os sons <b>cr, tr, gr</b> e <b>pr</b> (Student's Book p. 82 e Workbook p. 54)</li>
+      <li><b>Food containers</b>: <i>a bottle of, a jar of, a carton of, a can of, a cup of, a bag of</i> (Student's Book p. 84, Workbook p. 56 e caderno)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>🛤️ Sua trilha</h2>
+    <p class="sub">Os materiais abrem um por vez, na ordem. Conclua um para destravar o próximo.</p>
+    <div class="trilha" id="trilhaCards"></div>
+  </div>
+  <div class="card">
+    <h2>🧭 Como usar</h2>
+    <ol>
+      <li>Os materiais abrem <b>um por vez, na ordem</b>. Conclua um para destravar o próximo.</li>
+      <li>Leia cada cestinha com calma e <b>ouça</b> as frases em inglês antes de responder.</li>
+      <li>Errou? Tudo bem! Leia a explicação e siga em frente. Errar aqui é treino.</li>
+      <li>Depois de terminar tudo, os materiais ficam abertos para revisar quantas vezes quiser.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>💾 Seu progresso</h2>
+    <p class="painel-salvar" id="painelSalvar">Seu progresso é salvo sozinho neste aparelho.</p>
+    <button class="btn claro" id="btExportar">📥 Exportar</button>
+    <button class="btn claro" id="btImportar">📤 Importar</button>
+    <button class="btn claro" id="btZerar">🗑️ Zerar tudo</button>
+    <input type="file" id="arqImportar" accept=".json,application/json" style="display:none">
+  </div>
+  <div class="card">
+    <h2>📊 Relatório para os pais</h2>
+    <p class="sub">👨‍👩‍👧 Dica para os pais: o progresso fica salvo no navegador deste aparelho. Trocou de aparelho? Use 📥 Exportar / 📤 Importar ou o código da família para liberar a trilha.</p>
+    <p>Digite o código do Simulado (SIM-…) ou o código da família:</p>
+    <input class="codigo" id="codPais" placeholder="Código" autocomplete="off">
+    <button class="btn fio" id="btRelatorio">Abrir</button>
+    <div id="areaPais"></div>
+  </div>
+</section>
+
+<!-- ============ LEITURA ============ -->
+<section class="aba" id="sec-leitura">
+  <div class="card">
+    <h2>📖 Leitura Guiada</h2>
+    <p>Cada cestinha tem uma explicação curtinha e <b>3 perguntas</b>. A cestinha seguinte abre quando você responder as 3 da anterior.</p>
+    <div class="barra"><div id="barraLeitura"></div></div>
+    <p class="sub" id="txtLeitura"></p>
+  </div>
+  <div id="blocosLeitura"></div>
+  <div class="card" id="fimLeitura">
+    <h2>🚨 Pegadinhas para não cair na prova</h2>
+    <ol>
+      <li><b>There aren't</b> e <b>There isn't</b> têm apóstrofo ('). ❌ There arent &nbsp; ✅ There aren't</li>
+      <li>Não junte <i>There's</i> com <i>isn't</i>. ❌ Theres isn't any cheese &nbsp; ✅ There isn't any cheese</li>
+      <li>Plural pede <b>There are</b>. ❌ There's some mushrooms &nbsp; ✅ There are some mushrooms</li>
+      <li><b>too</b> tem dois <b>o</b>. ❌ There are to many sausages &nbsp; ✅ There are too many sausages</li>
+      <li><b>enough</b> vem <b>antes</b> da comida. ❌ There's honey enough &nbsp; ✅ There's enough honey</li>
+      <li>❌ There AreA'nt trees &nbsp; ✅ There aren't enough trees</li>
+      <li>Escreva certinho: <b>cheese</b> (dois e), <b>salad</b>, <b>mushrooms</b> (com s), <b>shish kebabs</b>.</li>
+      <li><b>carton</b> se escreve c-a-r-t-o-n. ❌ a canton of juice &nbsp; ✅ a carton of juice</li>
+      <li>O mel vai no pote: ✅ <b>a jar of honey</b> (no Workbook, "a carton of honey" era uma etiqueta trocada!)</li>
+      <li>Em <i>Two trains traveled toward the tree</i>, só <b>trains, traveled</b> e <b>tree</b> têm o som <b>tr</b>. <i>Two</i> e <i>toward</i> não!</li>
+    </ol>
+    <h3>🗂️ De onde veio cada cestinha</h3>
+    <table class="quadro">
+      <tr><th>Tópico do livro</th><th>Cestinha</th></tr>
+      <tr><td>Foods (Student's Book p. 80, Workbook p. 52)</td><td>1</td></tr>
+      <tr><td>There's / There are (caderno e Student's Book p. 80)</td><td>2</td></tr>
+      <tr><td>There isn't / There aren't, some e any (Student's Book p. 80, Workbook p. 52)</td><td>3</td></tr>
+      <tr><td>Countable e uncountable nouns (caderno)</td><td>4</td></tr>
+      <tr><td>Too much / Too many (Student's Book p. 81, Workbook p. 53, caderno)</td><td>5</td></tr>
+      <tr><td>Enough (Student's Book p. 81, Workbook p. 53, caderno)</td><td>6</td></tr>
+      <tr><td>Talk about your neighborhood (Student's Book p. 81, Workbook p. 53)</td><td>7</td></tr>
+      <tr><td>Phonics cr e tr (Student's Book p. 82, Workbook p. 54)</td><td>8</td></tr>
+      <tr><td>Phonics gr e pr (Student's Book p. 82, Workbook p. 54)</td><td>9</td></tr>
+      <tr><td>Food containers (Student's Book p. 84, Workbook p. 56, caderno)</td><td>10</td></tr>
+      <tr><td>Revisão geral</td><td>11</td></tr>
+    </table>
+    <div style="text-align:center"><button class="btn faisca" data-proximo="mapa">🧠 Ir para o Mapa Mental</button></div>
+  </div>
+</section>
+
+<!-- ============ MAPA MENTAL ============ -->
+<section class="aba" id="sec-mapa">
+  <div class="card">
+    <h2>🧠 Mapa da Toalha — Mapa Mental para encaixar</h2>
+    <p>O mapa tem algumas <b>peças faltando</b>. Em cada uma, clique na palavra certa. Acertou? Ela fica verde e entra no mapa. Errou? Tente de novo! 😉</p>
+  </div>
+  <div class="contador" id="contadorMapa">🧩 Mapa: 0 peças encaixadas</div>
+  <div class="mapa incompleto" id="mapa">
+    <div class="centro">🧺 <i>Food Matters</i> — Unit 7</div>
+    <div class="ramos" id="ramosMapa"></div>
+  </div>
+  <div class="card" id="mapaFim" style="display:none;text-align:center">
+    <div class="trofeu">🧠</div>
+    <h2>Mapa completo!</h2>
+    <p>Foi você quem montou! Agora vamos testar no jogo "Tem ou Não Tem?" (Verdadeiro ou Falso).</p>
+    <button class="btn faisca" data-proximo="vf">✅ Ir para o Verdadeiro ou Falso</button>
+  </div>
+</section>
+
+<!-- ============ VERDADEIRO OU FALSO ============ -->
+<section class="aba" id="sec-vf">
+  <div class="card" id="vfJogo"></div>
+</section>
+
+<!-- ============ RESUMO ============ -->
+<section class="aba" id="sec-resumo">
+  <div class="card">
+    <h2>🗺️ Cardápio do Piquenique — Resumo Final</h2>
+    <p>Tudo o que cai na prova, num lugar só. Toque no 🔊 para ouvir.</p>
+  </div>
+  <div class="card">
+    <h2>🍗 Foods — as comidas da Unit 7</h2>
+    <div class="grade" id="gradeFoods"></div>
+  </div>
+  <div class="card">
+    <h2>✅❌ There's / There are / There isn't / There aren't</h2>
+    <div id="tabelaThere"></div>
+  </div>
+  <div class="card">
+    <h2>🔢 Countable × Uncountable</h2>
+    <div class="comp" id="compContar"></div>
+  </div>
+  <div class="card">
+    <h2>🍯 Too much · Too many · Enough</h2>
+    <div id="tabelaToo"></div>
+  </div>
+  <div class="card">
+    <h2>🧺 Food containers</h2>
+    <div class="grade" id="gradeContainers"></div>
+  </div>
+  <div class="card">
+    <h2>🔤 Phonics: cr · tr · gr · pr</h2>
+    <div id="phonicsResumo"></div>
+  </div>
+  <div class="card">
+    <h2>🚨 Dicas de prova: escreva certinho!</h2>
+    <div class="postits" id="postits"></div>
+  </div>
+  <div class="card">
+    <h2>📚 Outras palavras importantes</h2>
+    <div class="grade" id="gradePalavras"></div>
+  </div>
+  <div class="card relampago">
+    <h2>⚡ Mini-quiz relâmpago</h2>
+    <p class="sub">Clique na pergunta para ver a resposta.</p>
+    <div id="relampago"></div>
+  </div>
+  <div class="card" style="text-align:center" id="fimResumo">
+    <button class="btn" id="btLiResumo" disabled>✅ Li o resumo até o fim</button>
+    <p class="sub" id="txtLiResumo">O botão acende quando você chegar ao fim da página.</p>
+    <button class="btn faisca" data-proximo="simulado">📝 Pronto para o Simulado!</button>
+  </div>
+</section>
+
+<!-- ============ SIMULADO ============ -->
+<section class="aba" id="sec-simulado">
+  <div class="card">
+    <h2>📝 O Grande Piquenique — Simulado</h2>
+    <p>25 questões, como numa prova de verdade. Responda todas e clique em <b>Enviar</b>. Depois aparece o gabarito comentado, com áudio.</p>
+    <div class="barra"><div id="barraSim"></div></div>
+    <p class="sub" id="txtSim"></p>
+  </div>
+  <div id="questoesSim"></div>
+  <div class="card" style="text-align:center" id="envioSim">
+    <button class="btn faisca" id="btEnviarSim">📨 Enviar Simulado</button>
+  </div>
+  <div id="resultadoSim"></div>
+</section>
+</main>
+<footer>🧺 Piquenique Xadrez · Inglês 5º ano · Conteúdo do livro, Unit 7 (Student's Book p. 80, 81, 82 e 84 · Workbook p. 52, 53, 54 e 56 · caderno) · Bons estudos, jovem aprendiz!</footer>
+<div class="fundo-modal" id="fundoModal"><div class="modal" id="modal"></div></div>
+<script>
+// ===================== DADOS (fonte: fotos enviadas — Student's Book p. 80, 81, 82, 84; Workbook p. 52, 53, 54, 56; caderno de 17/11) =====================
+function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+function en(t, mostrar){ return `<span class="en">${mostrar||t}</span><button class="som" data-fala="${esc(t)}" title="Ouvir em inglês" aria-label="Ouvir">🔊</button>`; }
+
+// Comidas (Student's Book p. 80 e 81, Workbook p. 52, 53 e 56, caderno). Tradução de apoio.
+const FOODS = [
+ ['🍗','chicken','frango'],['🥛','yogurt','iogurte'],['🥗','salad','salada'],['🧀','cheese','queijo'],
+ ['🥜','nuts','castanhas'],['🍯','honey','mel'],['🍢','shish kebabs','espetinhos'],['🍄','mushrooms','cogumelos'],
+ ['🌭','sausages','salsichas'],['🍪','cookies','biscoitos (cookies)'],['🍎','apples','maçãs'],['🥚','eggs','ovos'],
+ ['💧','water','água'],['🧃','juice','suco'],['🥤','soda','refrigerante'],['☕','coffee','café'],
+ ['🍚','rice','arroz'],['🍵','tea','chá'],['🍫','hot chocolate','chocolate quente']
+];
+
+const BLOCOS = [
+{ id:'b1', emoji:'🍗', prato:'🍗', titulo:'Foods — as comidas da Unit 7', tema:'Vocabulário e escrita', pag:"Student's Book p. 80 · Workbook p. 52", cor:'#e05a47',
+  html:`<p class="fala">Migalha: "Olha a mesa da Lesson 1! Antes de tudo, vamos conhecer as comidas e aprender a ESCREVER cada uma certinho."</p>
+<div class="galeria">
+ <div class="item">🍗<br>${en('chicken')}<br><span class="sub">frango</span></div>
+ <div class="item">🥛<br>${en('yogurt')}<br><span class="sub">iogurte</span></div>
+ <div class="item">🥗<br>${en('salad')}<br><span class="sub">salada</span></div>
+ <div class="item">🧀<br>${en('cheese')}<br><span class="sub">queijo</span></div>
+ <div class="item">🥜<br>${en('nuts')}<br><span class="sub">castanhas</span></div>
+ <div class="item">🍯<br>${en('honey')}<br><span class="sub">mel</span></div>
+ <div class="item">🍢<br>${en('shish kebabs')}<br><span class="sub">espetinhos</span></div>
+ <div class="item">🍄<br>${en('mushrooms')}<br><span class="sub">cogumelos</span></div>
+</div>
+<div class="regra">📌 No livro (p. 80), cada comida aparece numa frase: ${en("There's some chicken.")} · ${en("There's some yogurt.")} · ${en("There's some salad.")} · ${en("There's some cheese.")} · ${en("There are some nuts.")} · ${en("There's some honey.")} · ${en("There are some shish kebabs.")} · ${en("There are some mushrooms.")}</div>
+<div class="exemplo">🔤 No Workbook (p. 52) as letras vêm embaralhadas e <b>falta uma letra</b> em cada palavra:<br>
+kchice → <b>chicken</b> (falta o <b>n</b>) · uoyrt → <b>yogurt</b> (falta o <b>g</b>) · esceh → <b>cheese</b> (falta um <b>e</b>) · mssouhro → <b>mushrooms</b> (falta um <b>m</b>)<br>
+adls → <b>salad</b> (falta um <b>a</b>) · ohne → <b>honey</b> (falta o <b>y</b>) · hishs ebbas → <b>shish kebabs</b> (falta o <b>k</b>) · tsn → <b>nuts</b> (falta o <b>u</b>)</div>
+<div class="alerta">🚨 <b>Escreva certinho!</b><br>❌ Chese → ✅ <b>cheese</b> (c-h-<b>e-e</b>-s-e, dois e no meio)<br>❌ sald → ✅ <b>salad</b> (s-a-l-<b>a</b>-d)<br>❌ mushroom → ✅ <b>mushrooms</b> (no livro está no plural, com <b>s</b>)<br>❌ Shish Kebab → ✅ <b>shish kebabs</b> (também no plural)</div>`,
+  palavras:['chicken','yogurt','salad','cheese','nuts','honey','shish kebabs','mushrooms'],
+  qs:[
+   {q:'Qual destas palavras está escrita certinho?', fala:'cheese', o:[
+     {t:'cheese',ok:1,w:'Isso! C-H-E-E-S-E: dois e no meio e um e no fim.'},
+     {t:'chese',w:'Falta um e no meio: o certo é cheese (c-h-e-e-s-e).'},
+     {t:'cheesse',w:'Sobrou um s. O certo é cheese, com um s só.'},
+     {t:'chees',w:'Faltou o e do final. O certo é cheese.'}]},
+   {q:'No livro (p. 80), quais comidas aparecem com "There are some"?', fala:'There are some nuts. There are some shish kebabs. There are some mushrooms.', o:[
+     {t:'nuts, shish kebabs e mushrooms',ok:1,w:'Certo! São as três que estão no plural (terminam em s).'},
+     {t:'chicken, yogurt e salad',w:'Essas aparecem com "There\'s some": There\'s some chicken, There\'s some yogurt, There\'s some salad.'},
+     {t:'cheese, honey e salad',w:'Essas aparecem com "There\'s some" no livro.'},
+     {t:'chicken, nuts e honey',w:'Só nuts vem com "There are". Chicken e honey vêm com "There\'s some".'}]},
+   {q:'No Workbook (p. 52), "hishs ebbas" vira "shish kebabs". Qual letra estava faltando?', fala:'shish kebabs', o:[
+     {t:'k',ok:1,w:'Exato! Shish (s-h-i-s-h) + kebabs (k-e-b-a-b-s): o k é a letra que não estava.'},
+     {t:'t',w:'Não tem t em shish kebabs. A letra que faltava é o k, de kebabs.'},
+     {t:'s',w:'Os três s já estavam lá. A letra que faltava é o k.'},
+     {t:'h',w:'Os dois h já estavam lá. A letra que faltava é o k.'}]}
+  ]},
+
+{ id:'b2', emoji:'✅', prato:'🥗', titulo:"There's / There are", tema:'Dizer que algo existe (tem / há)', pag:"caderno · Student's Book p. 80", cor:'#43a047',
+  html:`<p class="fala">Migalha: "Para contar o que TEM na toalha, a gente usa duas expressões!"</p>
+<div class="regra">📒 <b>No caderno:</b> usamos duas expressões para dizer que algo existe ou está presente:<br>
+• ${en('There is')} : existe / há — <b>singular</b><br>
+• ${en('There are')} : existe / há — <b>plural</b></div>
+<div class="exemplo">✏️ <b>Examples (caderno):</b><br>${en('There is some honey.')} — há um pouco de mel<br>${en('There are some apples.')} — há poucas maçãs</div>
+<div class="regra">📌 ${en("There's")} é o jeito curtinho de escrever <b>There is</b>. O livro usa os dois: ${en("There is enough salad.")} e ${en("There's too much cheese.")} (p. 81).</div>
+<table class="quadro"><tr><th>There's some… (singular)</th><th>There are some… (plural)</th></tr>
+<tr><td>${en("There's some chicken.")}<br>${en("There's some yogurt.")}<br>${en("There's some salad.")}<br>${en("There's some cheese.")}<br>${en("There's some honey.")}</td><td>${en('There are some nuts.')}<br>${en('There are some shish kebabs.')}<br>${en('There are some mushrooms.')}</td></tr></table>
+<div class="alerta">🚨 <b>Mushrooms</b> termina em <b>s</b>: é plural!<br>❌ There's some mushrooms. → ✅ <b>There are some mushrooms.</b></div>`,
+  palavras:['There is (There\'s) = há (singular)','There are = há (plural)','some'],
+  qs:[
+   {q:'Complete: "_____ some mushrooms."', fala:'There are some mushrooms.', o:[
+     {t:'There are',ok:1,w:'Isso! Mushrooms está no plural, então é There are. Igual ao livro: There are some mushrooms.'},
+     {t:"There's",w:'Mushrooms termina em s, é plural. There\'s é para o singular. O certo: There are some mushrooms.'},
+     {t:'There is',w:'There is é para o singular. Mushrooms é plural: There are some mushrooms.'},
+     {t:"There isn't",w:'Isn\'t é negativo e não combina com some. O livro diz: There are some mushrooms.'}]},
+   {q:'Qual frase está igual ao livro (p. 80)?', fala:"There's some honey.", o:[
+     {t:"There's some honey.",ok:1,w:'Certo! Honey vem com There\'s some no livro.'},
+     {t:'There are some honey.',w:'Honey não é plural. O livro diz: There\'s some honey.'},
+     {t:'There are some cheese.',w:'Cheese não é plural. O livro diz: There\'s some cheese.'},
+     {t:"There's some mushroom.",w:'No livro é plural: There are some mushrooms.'}]},
+   {q:'No caderno, "There is" é usado para o _____ e "There are" para o _____.', fala:'There is. There are.', o:[
+     {t:'singular / plural',ok:1,w:'Exato! There is → singular; There are → plural.'},
+     {t:'plural / singular',w:'É ao contrário: There is → singular; There are → plural.'},
+     {t:'negativo / afirmativo',w:'Os dois são afirmativos (dizem que tem). A diferença é singular × plural.'},
+     {t:'comidas / bebidas',w:'Não é isso. There is → singular; There are → plural.'}]}
+  ]},
+
+{ id:'b3', emoji:'❌', prato:'🍢', titulo:"There isn't / There aren't", tema:'Dizer que NÃO tem · some e any', pag:"Student's Book p. 80 · Workbook p. 52", cor:'#4a90d9',
+  html:`<p class="fala">Migalha: "Na mesa da p. 80 tem algumas coisas... e faltam outras! Para dizer que NÃO tem, a gente usa isn't e aren't."</p>
+<div class="regra">📦 <b>O quadro do Workbook (p. 52):</b><br>${en("There's some")} · ${en('There are some')} · ${en("There isn't any")} · ${en("There aren't any")}<br>👉 <b>some</b> nas frases que dizem que <b>tem</b> · <b>any</b> nas frases que dizem que <b>não tem</b>.</div>
+<div class="exemplo">🍽️ <b>A mesa do livro (p. 80, atividade 2):</b><br>
+1. ${en("There's some chicken.")}<br>2. ${en("There aren't any shish kebabs.")}<br>3. ${en("There's some honey.")}<br>4. ${en("There aren't any nuts.")}<br>5. ${en("There's some salad.")}<br>6. ${en('There are some mushrooms.')}<br>7. ${en("There's some yogurt.")}<br>8. ${en("There isn't any cheese.")}</div>
+<div class="regra">📌 <b>There isn't</b> → singular (cheese, honey…) · <b>There aren't</b> → plural (nuts, shish kebabs…)</div>
+<div class="alerta">🚨 <b>O apóstrofo (') é obrigatório!</b><br>❌ There arent → ✅ <b>There aren't</b><br>❌ Theres isn't any cheese → ✅ <b>There isn't any cheese</b> (não junte There's com isn't)</div>`,
+  palavras:["There isn't any","There aren't any","some (tem)","any (não tem)","apóstrofo '"],
+  qs:[
+   {q:'Qual frase está escrita certinho?', fala:"There aren't any nuts.", o:[
+     {t:"There aren't any nuts.",ok:1,w:'Perfeito: aren\'t com apóstrofo entre o n e o t.'},
+     {t:'There arent any nuts.',w:'Faltou o apóstrofo: aren\'t.'},
+     {t:"There are'nt any nuts.",w:'O apóstrofo está no lugar errado. O certo é aren\'t (entre o n e o t).'},
+     {t:"Theres aren't any nuts.",w:'Não junte There\'s com aren\'t. O certo: There aren\'t any nuts.'}]},
+   {q:'Complete: "_____ any cheese."', fala:"There isn't any cheese.", o:[
+     {t:"There isn't",ok:1,w:'Isso! Cheese é singular e a frase diz que NÃO tem: There isn\'t any cheese.'},
+     {t:"Theres isn't",w:'Não se junta There\'s com isn\'t. O certo é só There isn\'t.'},
+     {t:"There aren't",w:'Aren\'t é para o plural. Cheese é singular: There isn\'t any cheese.'},
+     {t:"There's",w:'Com any a frase é negativa. O certo: There isn\'t any cheese.'}]},
+   {q:'Na mesa do livro (p. 80) NÃO há espetinhos. Qual frase diz isso?', fala:"There aren't any shish kebabs.", o:[
+     {t:"There aren't any shish kebabs.",ok:1,w:'Certo! Plural + negativo = There aren\'t any. É o exemplo do livro.'},
+     {t:"There isn't any shish kebabs.",w:'Shish kebabs é plural, então é aren\'t.'},
+     {t:'There are some shish kebabs.',w:'Essa frase diz que TEM espetinhos. Na mesa não tem.'},
+     {t:"There aren't some shish kebabs.",w:'Na frase negativa usamos any, não some.'}]}
+  ]},
+
+{ id:'b4', emoji:'🔢', prato:'🍎', titulo:'Countable × Uncountable', tema:'Dá para contar ou não dá?', pag:'caderno (17/11)', cor:'#8e5bd0',
+  html:`<p class="fala">Migalha: "Eu conto as maçãs uma por uma... mas como eu conto a água? 🤔"</p>
+<div class="comp">
+ <div class="col" style="--c:#8e5bd0"><h4>🍎 Countable nouns</h4><p style="font-size:.92em">Alimentos que são <b>contáveis</b>: podemos usar <b>números</b> antes deles.</p><ul><li>${en('apples')}</li><li>${en('eggs')}</li><li>${en('mushrooms')}</li></ul></div>
+ <div class="col" style="--c:#4a90d9"><h4>💧 Uncountable nouns</h4><p style="font-size:.92em">Alimentos que <b>não podemos contar</b> individualmente, pois representam <b>líquidos</b> ou <b>precisam de recipientes</b> para serem medidos.</p><ul><li>${en('water')}</li><li>${en('honey')}</li><li>${en('rice')}</li></ul></div>
+</div>
+<div class="regra">📌 <b>Ligue com o que você já sabe:</b><br>Countable (plural) → ${en('There are some mushrooms.')}<br>Uncountable → ${en('There is some honey.')}</div>
+<div class="caixa">✍️ Escreva certinho: <b>countable</b> e <b>uncountable</b> (c-o-u-n-t-a-b-l-e).</div>`,
+  palavras:['countable (contável)','uncountable (incontável)','apples','eggs','water','honey','rice'],
+  qs:[
+   {q:'Qual grupo tem SÓ uncountable nouns (do caderno)?', fala:'water, honey, rice', o:[
+     {t:'water, honey, rice',ok:1,w:'Isso! São os três exemplos de uncountable do caderno.'},
+     {t:'apples, eggs, mushrooms',w:'Esses são countable: dá para contar (two apples, three eggs).'},
+     {t:'water, eggs, rice',w:'Eggs é countable (dá para contar os ovos).'},
+     {t:'honey, apples, water',w:'Apples é countable (dá para contar as maçãs).'}]},
+   {q:'Por que "water" é uncountable?', fala:'water', o:[
+     {t:'Porque é um líquido: não dá para contar um por um',ok:1,w:'Certo! O caderno diz: representam líquidos ou precisam de recipientes para serem medidos.'},
+     {t:'Porque começa com a letra w',w:'A letra não importa. É uncountable porque é um líquido.'},
+     {t:'Porque está sempre no plural',w:'Não: water não é plural. É uncountable porque é um líquido.'},
+     {t:'Porque é uma palavra comprida',w:'O tamanho não importa. É uncountable porque é um líquido.'}]},
+   {q:'Qual destas palavras é countable (podemos usar número antes)?', fala:'eggs', o:[
+     {t:'eggs',ok:1,w:'Exato! Dá para contar: one egg, two eggs...'},
+     {t:'honey',w:'Honey é uncountable (precisa de um pote para ser medido).'},
+     {t:'rice',w:'Rice é uncountable no caderno.'},
+     {t:'water',w:'Water é uncountable: é um líquido.'}]}
+  ]},
+
+{ id:'b5', emoji:'🍯', prato:'🧀', titulo:'Too much / Too many', tema:'Quando tem DEMAIS', pag:"Student's Book p. 81 · Workbook p. 53 · caderno", cor:'#f39c12',
+  html:`<p class="fala">Migalha: "Na história da p. 81 tem tanta comida que nem cabe na mesa!"</p>
+<div class="balao"><span class="quem">🧑</span><div>${en("Here's the food!")}</div></div>
+<div class="balao"><span class="quem">🧑</span><div>${en("Oh, Bouncer! There are too many shish kebabs, and there's too much cheese!")}</div></div>
+<div class="regra">👀 <b>Take a peek (p. 81):</b> ${en("There's too much cheese.")} · ${en('There are too many shish kebabs.')}</div>
+<div class="comp">
+ <div class="col" style="--c:#f39c12"><h4>Too much</h4><p>muito / muita · <b>incontáveis</b></p><p>${en("There's too much cheese.")}<br>${en("There's too much salad.")}</p></div>
+ <div class="col" style="--c:#8e5bd0"><h4>Too many</h4><p>muitos / muitas · <b>contáveis</b></p><p>${en('There are too many shish kebabs.')}<br>${en('There are too many sausages.')}</p></div>
+</div>
+<div class="exemplo">🧩 <b>Sort it out (p. 81):</b> salad e cheese → <b>too much</b> · mushrooms e kebabs → <b>too many</b></div>
+<div class="regra">📌 There's + <b>too much</b> · There are + <b>too many</b></div>
+<div class="alerta">🚨 <b>too</b> tem dois <b>o</b>!<br>❌ There are to many sausages → ✅ <b>There are too many sausages.</b></div>`,
+  palavras:['too much (muito/muita – incontáveis)','too many (muitos/muitas – contáveis)','sausages','cheese'],
+  qs:[
+   {q:'Complete: "There are _____ shish kebabs."', fala:'There are too many shish kebabs.', o:[
+     {t:'too many',ok:1,w:'Isso! Shish kebabs são contáveis (plural): too many.'},
+     {t:'too much',w:'Too much é para o que não se conta. Shish kebabs se contam: too many.'},
+     {t:'to many',w:'Faltou um o: too many.'},
+     {t:'some much',w:'Essa expressão não existe no livro. O certo é too many.'}]},
+   {q:'Na história da p. 81, o que tem DEMAIS?', fala:"There are too many shish kebabs, and there's too much cheese!", o:[
+     {t:'shish kebabs e cheese',ok:1,w:'Certo! "There are too many shish kebabs, and there\'s too much cheese!"'},
+     {t:'salad e cheese',w:'A salada NÃO é demais: "There isn\'t enough salad!"'},
+     {t:'salad e shish kebabs',w:'A salada não é demais, ela falta: "There isn\'t enough salad!"'},
+     {t:'só a salad',w:'É o contrário: a salada falta. Demais são shish kebabs e cheese.'}]},
+   {q:'Qual frase está correta?', fala:"There's too much cheese.", o:[
+     {t:"There's too much cheese.",ok:1,w:'Perfeito! É a frase do Take a peek da p. 81.'},
+     {t:'There are too much cheese.',w:'Cheese é incontável: There\'s too much cheese.'},
+     {t:"There's too many cheese.",w:'Too many é para o que se conta. Cheese: too much.'},
+     {t:"There's to much cheese.",w:'Faltou um o: too much.'}]}
+  ]},
+
+{ id:'b6', emoji:'👌', prato:'🍯', titulo:'Enough — suficiente', tema:'Tem o suficiente? Não tem o suficiente?', pag:"Student's Book p. 81 · Workbook p. 53 · caderno", cor:'#16a085',
+  html:`<p class="fala">Migalha: "Tem kebab demais... mas a salada? Não deu para todo mundo!"</p>
+<div class="balao"><span class="quem">🧒</span><div>${en("There isn't enough salad!")}</div></div>
+<div class="regra">📒 <b>Caderno:</b> Enough – suficiente – quantidade suficiente.</div>
+<div class="regra">👀 <b>Take a peek (p. 81):</b><br>${en('There is enough salad.')} / ${en("There isn't enough salad.")}<br>${en('There are enough mushrooms.')} / ${en("There aren't enough mushrooms.")}</div>
+<div class="exemplo">🧩 <b>Enough serve para os dois tipos</b>: salad (incontável) e mushrooms (contável). Por isso, no <b>Sort it out</b> (p. 81), <b>nuts</b> e <b>honey</b> ficam juntos em <b>enough</b>.</div>
+<div class="alerta">🚨 <b>enough vem ANTES da comida!</b><br>❌ There aren't kebabs enough → ✅ <b>${en("There aren't enough kebabs.")}</b><br>❌ There's honey enough → ✅ <b>${en("There's enough honey.")}</b><br>✅ ${en("There isn't enough cheese.")}</div>`,
+  palavras:['enough (suficiente)',"There isn't enough","There aren't enough","There's enough"],
+  qs:[
+   {q:'Qual frase está na ordem certa?', fala:"There aren't enough kebabs.", o:[
+     {t:"There aren't enough kebabs.",ok:1,w:'Isso! Enough vem antes da comida.'},
+     {t:"There aren't kebabs enough.",w:'Enough não fica no fim. O certo: There aren\'t enough kebabs.'},
+     {t:"There enough aren't kebabs.",w:'Primeiro vem There aren\'t, depois enough e depois a comida.'},
+     {t:"Kebabs there aren't enough.",w:'A frase começa com There. O certo: There aren\'t enough kebabs.'}]},
+   {q:'No Sort it out (p. 81), nuts e honey ficam juntos com qual palavra?', fala:'enough', o:[
+     {t:'Enough',ok:1,w:'Certo! Enough serve para o que se conta (nuts) e para o que não se conta (honey).'},
+     {t:'Too much',w:'Too much ficou com salad e cheese (incontáveis). Nuts é contável.'},
+     {t:'Too many',w:'Too many ficou com mushrooms e kebabs (contáveis). Honey é incontável.'},
+     {t:"There aren't",w:'O Sort it out tinha só too much, too many e enough. Nuts e honey: enough.'}]},
+   {q:'Olhando a história da p. 81, a frase "There\'s enough salad." é True ou False?', fala:"There isn't enough salad!", o:[
+     {t:'False, porque na história alguém diz "There isn\'t enough salad!"',ok:1,w:'Exato! A salada não é suficiente.'},
+     {t:'True, porque tem salada demais',w:'Não tem salada demais. Na história: "There isn\'t enough salad!"'},
+     {t:'True, porque a salada é suficiente',w:'Na história a salada NÃO é suficiente: "There isn\'t enough salad!"'},
+     {t:'False, porque tem salada demais',w:'É False, mas não por isso: a salada não é demais, ela FALTA.'}]}
+  ]},
+
+{ id:'b7', emoji:'🏙️', prato:'🌳', titulo:'Talk about your neighborhood', tema:'Too much, too many e enough no bairro', pag:"Student's Book p. 81 · Workbook p. 53", cor:'#607d8b',
+  html:`<p class="fala">Migalha: "As mesmas expressões servem para falar do bairro (neighborhood)!"</p>
+<div class="regra">💬 <b>Frases do livro (p. 81):</b><br>${en('There are too many')} … · ${en("There aren't enough")} … · ${en('There are enough')} …<br>${en("There's too much")} … · ${en("There isn't enough")} … · ${en("There's enough")} …</div>
+<div class="exemplo">🗨️ <b>Exemplo do livro:</b> ${en("There aren't enough parks in our neighborhood.")}<br>Palavras: ${en('parks')} · ${en('trees')} · ${en('litter')} · ${en('supermarkets')} · ${en('water')} · ${en('movie theaters')} · ${en('pollution')}</div>
+<div class="exemplo">🖼️ <b>A figura do Workbook (p. 53)</b> mostra uma cidade cinza, com fumaça, uma fila de carros, lojas cheias de placas (SALE, BUY NOW!, CHEAPEST, SHOP HERE), lixo saindo da lixeira e só <b>uma árvore seca</b>.<br>
+Modelo do livro: ${en("There's too much pollution.")}<br>${en("There's too much litter.")} · ${en('There are too many stores.')} · ${en('There are too many cars.')} · ${en("There aren't enough trees.")}</div>
+<div class="alerta">🚨 ❌ There AreA'nt trees → ✅ <b>There aren't enough trees.</b> (aren't com apóstrofo e não esqueça o enough!)</div>`,
+  palavras:['neighborhood (bairro)','pollution (poluição)','litter (lixo)','trees (árvores)','cars (carros)','stores (lojas)','parks (parques)'],
+  qs:[
+   {q:'Na figura do Workbook (p. 53) há uma fila enorme de carros. Qual frase combina?', fala:'There are too many cars.', o:[
+     {t:'There are too many cars.',ok:1,w:'Isso! Carros se contam (plural): There are too many.'},
+     {t:"There's too much cars.",w:'Cars é plural e contável: There are too many cars.'},
+     {t:"There aren't enough cars.",w:'Tem carro demais, não de menos!'},
+     {t:'There are too much cars.',w:'Para coisas que se contam é too many.'}]},
+   {q:'Na figura só há UMA árvore, e ela está seca. Qual frase combina?', fala:"There aren't enough trees.", o:[
+     {t:"There aren't enough trees.",ok:1,w:'Certo! Trees é plural e faltam árvores: There aren\'t enough trees.'},
+     {t:"There AreA'nt trees.",w:'Escrita errada e faltou o enough. O certo: There aren\'t enough trees.'},
+     {t:'There are too many trees.',w:'Só tem uma árvore: não é demais, é de menos.'},
+     {t:"There isn't enough trees.",w:'Trees é plural, então é aren\'t.'}]},
+   {q:'Complete o modelo do livro: "There\'s too much _____."', fala:"There's too much pollution.", o:[
+     {t:'pollution',ok:1,w:'Isso! É o modelo do Workbook (p. 53). Poluição não se conta: too much.'},
+     {t:'trees',w:'Trees é plural (se conta): There are too many trees.'},
+     {t:'cars',w:'Cars é plural (se conta): There are too many cars.'},
+     {t:'parks',w:'Parks é plural (se conta): seria too many.'}]}
+  ]},
+
+{ id:'b8', emoji:'👑', prato:'🦀', titulo:'Phonics: cr e tr', tema:'Trava-línguas', pag:"Student's Book p. 82 · Workbook p. 54", cor:'#9b59b6',
+  html:`<p class="fala">Migalha: "Hora de treinar a língua! Fale bem devagar e depois mais rápido."</p>
+<div class="balao"><span class="quem">🦀</span><div><b>cr</b>: ${en('The king crab wore a crown.')}<br>Palavras com cr: ${en('crab')} · ${en('crown')}</div></div>
+<div class="balao"><span class="quem">🚆</span><div><b>tr</b>: ${en('Two trains traveled toward the tree.')}<br>Palavras com tr: ${en('trains')} · ${en('traveled')} · ${en('tree')}</div></div>
+<div class="exemplo">📖 <b>Na história do Workbook (p. 54):</b><br>${en("Help me! I'm under the tree. I'm a prince!")}<br>${en('Is it a toy train?')} — ${en("No, it's a new crown.")}<br>Word with cr-: <b>crown</b> · Words with tr-: <b>tree</b>, <b>train</b></div>
+<div class="regra">🎨 Cores do Workbook (p. 54): <b>cr- = purple</b> (roxo) · <b>tr- = yellow</b> (amarelo)</div>
+<div class="alerta">🚨 <b>Two</b> e <b>toward</b> começam com t, mas <b>não</b> têm o som tr! Em "Two trains traveled toward the tree" são só <b>3</b> palavras com tr: trains, traveled, tree.</div>`,
+  palavras:['cr: crab, crown','tr: trains, traveled, tree, train'],
+  qs:[
+   {q:'Qual palavra começa com o som cr?', fala:'crown', o:[
+     {t:'crown',ok:1,w:'Isso! Crown: c-r. Como no trava-língua: The king crab wore a crown.'},
+     {t:'tree',w:'Tree começa com tr.'},
+     {t:'grass',w:'Grass começa com gr.'},
+     {t:'prize',w:'Prize começa com pr.'}]},
+   {q:'Em "Two trains traveled toward the tree", quantas palavras começam com tr?', fala:'Two trains traveled toward the tree.', o:[
+     {t:'3 (trains, traveled, tree)',ok:1,w:'Certo! Two e toward começam com t, mas não com tr.'},
+     {t:'4 (trains, traveled, toward, tree)',w:'Toward começa com t-o, não com tr.'},
+     {t:'5 (todas menos the)',w:'Two e toward não começam com tr. São 3.'},
+     {t:'2 (trains, tree)',w:'Faltou traveled. São 3: trains, traveled, tree.'}]},
+   {q:'No Workbook (p. 54), qual é a cor do tr-?', fala:'yellow', o:[
+     {t:'yellow (amarelo)',ok:1,w:'Isso! tr- = yellow.'},
+     {t:'purple (roxo)',w:'Purple é a cor do cr-.'},
+     {t:'blue (azul)',w:'Blue é a cor do pr-.'},
+     {t:'red (vermelho)',w:'Red é a cor do gr-.'}]}
+  ]},
+
+{ id:'b9', emoji:'🦗', prato:'🦗', titulo:'Phonics: gr e pr', tema:'Gafanhoto, grama, princesa e prêmio', pag:"Student's Book p. 82 · Workbook p. 54", cor:'#27ae60',
+  html:`<p class="fala">Migalha: "Mais dois trava-línguas! Tem um gafanhoto e uma princesa nessa história..."</p>
+<div class="balao"><span class="quem">🦗</span><div><b>gr</b>: ${en('The grasshopper was gray, and the grass was green.')}<br>Palavras com gr: ${en('grasshopper')} · ${en('gray')} · ${en('grass')} · ${en('green')}</div></div>
+<div class="balao"><span class="quem">👸</span><div><b>pr</b>: ${en("The pretty princess won the prince's prize.")}<br>Palavras com pr: ${en('pretty')} · ${en('princess')} · ${en('prince')} · ${en('prize')}</div></div>
+<div class="exemplo">📖 <b>Na história do Workbook (p. 54):</b><br>Embaixo da árvore, um gafanhoto diz: ${en("Help me! I'm under the tree. I'm a prince!")}<br>A princesa responde: ${en("You're a grasshopper!")}<br>Ele diz: ${en("You're a princess. Kiss me. There's a prize!")}<br>Words with pr-: <b>prince, prize, princess</b> · Word with gr-: <b>grasshopper</b></div>
+<div class="regra">🎨 Cores do Workbook (p. 54): <b>pr- = blue</b> (azul) · <b>gr- = red</b> (vermelho)</div>`,
+  palavras:['gr: grasshopper, gray, grass, green','pr: pretty, princess, prince, prize'],
+  qs:[
+   {q:'Qual grupo tem SÓ palavras com gr?', fala:'grasshopper, gray, grass, green', o:[
+     {t:'grasshopper, gray, grass, green',ok:1,w:'Certo! É o trava-língua do gr.'},
+     {t:'grass, crab, green, gray',w:'Crab começa com cr.'},
+     {t:'pretty, prize, prince, princess',w:'Essas começam com pr.'},
+     {t:'tree, train, grass, gray',w:'Tree e train começam com tr.'}]},
+   {q:'Na história do Workbook (p. 54), quem diz "I\'m a prince!"?', fala:"Help me! I'm under the tree. I'm a prince!", o:[
+     {t:'O gafanhoto (grasshopper), embaixo da árvore',ok:1,w:'Isso! E a princesa responde: "You\'re a grasshopper!"'},
+     {t:'A princesa',w:'A princesa responde: "You\'re a grasshopper!"'},
+     {t:'O trem de brinquedo',w:'O trem aparece só no pensamento: "Is it a toy train?"'},
+     {t:'A coroa',w:'A coroa é o prêmio: "No, it\'s a new crown."'}]},
+   {q:'Qual palavra NÃO começa com pr?', fala:'green', o:[
+     {t:'green',ok:1,w:'Isso! Green começa com gr.'},
+     {t:'pretty',w:'Pretty começa com pr.'},
+     {t:'prize',w:'Prize começa com pr.'},
+     {t:'princess',w:'Princess começa com pr.'}]}
+  ]},
+
+{ id:'b10', emoji:'🧺', prato:'🧃', titulo:'Food containers', tema:'Garrafa, pote, caixinha, lata, xícara e pacote', pag:"Student's Book p. 84 · Workbook p. 56 · caderno", cor:'#d35400',
+  html:`<p class="fala">Migalha: "Para levar comida ao piquenique, a gente precisa das embalagens certas!"</p>
+<div class="galeria">
+ <div class="item">🍼<br>${en('a bottle of water')}<br><span class="sub">uma garrafa de água</span></div>
+ <div class="item">🍯<br>${en('a jar of honey')}<br><span class="sub">um pote de mel</span></div>
+ <div class="item">🧃<br>${en('a carton of juice')}<br><span class="sub">uma caixa de suco</span></div>
+ <div class="item">🥫<br>${en('a can of soda')}<br><span class="sub">uma lata de refrigerante</span></div>
+ <div class="item">☕<br>${en('a cup of coffee')}<br><span class="sub">uma xícara de café</span></div>
+ <div class="item">🍚<br>${en('a bag of rice')}<br><span class="sub">um pacote de arroz</span></div>
+</div>
+<div class="regra">📒 <b>Caderno — Food containers:</b><br>a carton of – uma caixa de · a jar of – um pote de · a bag of – um pacote de<br>a bottle of – uma garrafa de · a cup of – uma xícara de · a can of – uma lata de</div>
+<div class="exemplo">📊 Na tabela da p. 84, o livro já deu o exemplo: <b>a cup of</b> → ${en('coffee')}, ${en('tea')}, ${en('hot chocolate')}</div>
+<div class="exemplo">🏷️ <b>Workbook (p. 56): as etiquetas estavam TROCADAS!</b> O certo é:<br>1. ${en('a cup of coffee')} · 2. ${en('a can of soda')} · 3. ${en('a bottle of water')}<br>4. ${en('a bag of rice')} · 5. ${en('a jar of honey')} · 6. ${en('a carton of juice')}</div>
+<div class="alerta">🚨 ❌ a canton of juice → ✅ <b>a carton of juice</b> (c-a-r-t-o-n)<br>❌ a carton of honey (etiqueta trocada!) → ✅ <b>a jar of honey</b><br>🛒 Na lista de compras (Workbook p. 56), escreva a <b>embalagem + of + comida</b>: ${en('a bag of rice')}, ${en('a jar of honey')}… e não só "Rice".</div>`,
+  palavras:['a bottle of','a jar of','a carton of','a can of','a cup of','a bag of'],
+  qs:[
+   {q:'O mel (honey) vem em...', fala:'a jar of honey', o:[
+     {t:'a jar of honey',ok:1,w:'Isso! Um pote de mel, como na p. 84.'},
+     {t:'a carton of honey',w:'Essa era uma das etiquetas TROCADAS do Workbook. Mel vem no pote: a jar of honey.'},
+     {t:'a can of honey',w:'A can é a lata (de soda). Mel: a jar of honey.'},
+     {t:'a bag of honey',w:'A bag é o pacote (de rice). Mel: a jar of honey.'}]},
+   {q:'Qual está escrito certinho?', fala:'a carton of juice', o:[
+     {t:'a carton of juice',ok:1,w:'Perfeito: c-a-r-t-o-n.'},
+     {t:'a canton of juice',w:'Trocou o r por n. O certo é carton.'},
+     {t:'a cartoon of juice',w:'Cartoon é outra palavra! A caixinha é carton.'},
+     {t:'a carton juice',w:'Faltou o of: a carton OF juice.'}]},
+   {q:'"a bag of" quer dizer...', fala:'a bag of rice', o:[
+     {t:'um pacote de',ok:1,w:'Certo! A bag of rice = um pacote de arroz.'},
+     {t:'uma lata de',w:'Uma lata de = a can of.'},
+     {t:'uma garrafa de',w:'Uma garrafa de = a bottle of.'},
+     {t:'uma xícara de',w:'Uma xícara de = a cup of.'}]}
+  ]},
+
+{ id:'b11', emoji:'🏁', prato:'🍪', titulo:'Revisão geral', tema:'Mistura de tudo', pag:'Unit 7 inteira', cor:'#c0392b',
+  html:`<p class="fala">Migalha: "Última cestinha! Vamos misturar tudo para ver se a toalha fica completa!"</p>
+<div class="caixa">🍗 Foods · ✅ There's / There are · ❌ There isn't / There aren't · 🔢 countable × uncountable · 🍯 too much / too many · 👌 enough · 🏙️ neighborhood · 🔤 cr, tr, gr, pr · 🧺 food containers</div>`,
+  palavras:["There's / There are","There isn't / There aren't",'too much / too many / enough','a jar of / a carton of…'],
+  qs:[
+   {q:'Qual frase está ERRADA?', fala:'There are some mushrooms.', o:[
+     {t:"There's some mushrooms.",ok:1,w:'Esta é a errada! Mushrooms é plural: There are some mushrooms.'},
+     {t:"There's some cheese.",w:'Esta está certa (é do livro). A errada é "There\'s some mushrooms".'},
+     {t:'There are some nuts.',w:'Esta está certa (é do livro). A errada é "There\'s some mushrooms".'},
+     {t:"There isn't any cheese.",w:'Esta está certa (é do livro). A errada é "There\'s some mushrooms".'}]},
+   {q:'Complete: "There are _____ many sausages."', fala:'There are too many sausages.', o:[
+     {t:'too',ok:1,w:'Isso! Too com dois o.'},
+     {t:'to',w:'Faltou um o: too.'},
+     {t:'two',w:'Two é o número 2 (como em "Two trains"). Aqui é too.'},
+     {t:'much',w:'"much many" não existe. É too many.'}]},
+   {q:'Qual combinação é a do livro (p. 84)?', fala:'a bottle of water', o:[
+     {t:'a bottle of water',ok:1,w:'Certo! Uma garrafa de água.'},
+     {t:'a bag of water',w:'Essa era uma etiqueta TROCADA no Workbook. Água vem na garrafa: a bottle of water.'},
+     {t:'a bottle of rice',w:'Outra etiqueta trocada do Workbook! Arroz vem no pacote: a bag of rice.'},
+     {t:'a jar of coffee',w:'Etiqueta trocada do Workbook! O café vem na xícara: a cup of coffee.'}]}
+  ]}
+];
+
+// ----- Mapa Mental para encaixar (11 lacunas; a errada vem de outro ramo) -----
+const RAMOS = [
+ {nome:'🍗 Foods (p. 80)', cor:'#e05a47', nos:[
+   ['Na mesa: chicken, yogurt, salad, ', {id:'L1',certa:'cheese',errada:'crown'}, ', honey'],
+   'No plural: nuts, shish kebabs, mushrooms']},
+ {nome:"✅❌ There's / There are", cor:'#43a047', nos:[
+   "Singular: There is (There's) some honey.",
+   ['Plural: ', {id:'L2',certa:'There are',errada:'too much'}, ' some nuts.'],
+   ['Negativo: ', {id:'L3',certa:"There aren't",errada:'a bag of'}, ' any shish kebabs.'],
+   "There isn't any cheese · some = tem · any = não tem"]},
+ {nome:'🔢 Countable × Uncountable', cor:'#8e5bd0', nos:[
+   ['Countable (dá para contar): apples, eggs, ', {id:'L4',certa:'mushrooms',errada:'pollution'}],
+   ['Uncountable (líquidos ou precisam de recipiente): water, honey, ', {id:'L5',certa:'rice',errada:'trains'}]]},
+ {nome:'🍯 Too much · Too many · Enough', cor:'#f39c12', nos:[
+   ['Incontáveis: There\'s ', {id:'L6',certa:'too much',errada:'There are'}, ' cheese.'],
+   ['Contáveis: There are ', {id:'L7',certa:'too many',errada:'a jar of'}, ' shish kebabs.'],
+   "Enough = suficiente, vem ANTES da comida: There isn't enough salad."]},
+ {nome:'🏙️ Neighborhood (p. 81 e 53)', cor:'#607d8b', nos:[
+   ['There\'s too much ', {id:'L8',certa:'pollution',errada:'eggs'}, '.'],
+   "There are too many cars · There aren't enough trees"]},
+ {nome:'🔤 Phonics (p. 82 e 54)', cor:'#9b59b6', nos:[
+   ['cr: crab, ', {id:'L9',certa:'crown',errada:'cheese'}],
+   ['tr: trains, traveled, ', {id:'L10',certa:'tree',errada:'rice'}],
+   'gr: grasshopper, gray, grass, green · pr: pretty, princess, prince, prize']},
+ {nome:'🧺 Food containers (p. 84 e 56)', cor:'#d35400', nos:[
+   ['a jar of ', {id:'L11',certa:'honey',errada:'tree'}],
+   'a bottle of water · a carton of juice · a can of soda · a cup of coffee · a bag of rice']}
+];
+
+// ----- Verdadeiro ou Falso (banco de 28; sorteia 12) -----
+const VF = [
+ {f:'No livro (p. 80), a frase é "There\'s some chicken."', v:1, e:'Verdadeiro. É a primeira frase da Lesson 1.'},
+ {f:'"There are some honey." está certo.', v:0, e:'Falso. Honey não é plural: There\'s some honey (p. 80).'},
+ {f:'Mushrooms vem com "There are": There are some mushrooms.', v:1, e:'Verdadeiro. Mushrooms é plural.'},
+ {f:'"There arent any nuts." está escrito certo.', v:0, e:'Falso. Falta o apóstrofo: There aren\'t any nuts.'},
+ {f:'Na frase negativa usamos any: There isn\'t any cheese.', v:1, e:'Verdadeiro. some = tem; any = não tem.'},
+ {f:'No caderno, water, honey e rice são countable nouns.', v:0, e:'Falso. São uncountable: líquidos ou coisas que precisam de recipiente para medir.'},
+ {f:'Apples, eggs e mushrooms são countable: dá para usar números antes.', v:1, e:'Verdadeiro. É o que diz o caderno.'},
+ {f:'Too much combina com coisas que não se contam (incontáveis).', v:1, e:'Verdadeiro. Too much = muito(a), incontáveis.'},
+ {f:'"There are too much shish kebabs." está certo.', v:0, e:'Falso. Shish kebabs se contam: There are too many shish kebabs.'},
+ {f:'Na história da p. 81, tem salada demais.', v:0, e:'Falso. Na história: "There isn\'t enough salad!" A salada falta.'},
+ {f:'Na história da p. 81, tem queijo demais.', v:1, e:'Verdadeiro. "...and there\'s too much cheese!"'},
+ {f:'Enough quer dizer suficiente.', v:1, e:'Verdadeiro. Enough = suficiente (caderno).'},
+ {f:'"There\'s honey enough." está na ordem certa.', v:0, e:'Falso. Enough vem antes: There\'s enough honey.'},
+ {f:'O "too" de "too many" se escreve com dois o.', v:1, e:'Verdadeiro. "to many" está errado.'},
+ {f:'No Workbook (p. 53), o modelo do livro é "There\'s too much pollution."', v:1, e:'Verdadeiro. É a frase 1 da atividade 2.'},
+ {f:'Crown começa com o som cr.', v:1, e:'Verdadeiro. The king crab wore a crown.'},
+ {f:'Em "Two trains traveled toward the tree", a palavra toward começa com o som tr.', v:0, e:'Falso. Toward começa com t-o. As palavras com tr são trains, traveled e tree.'},
+ {f:'Grasshopper, gray, grass e green começam com gr.', v:1, e:'Verdadeiro. É o trava-língua do gr.'},
+ {f:'Prize começa com o som gr.', v:0, e:'Falso. Prize começa com pr.'},
+ {f:'No Workbook (p. 54), o pr- é pintado de azul (blue).', v:1, e:'Verdadeiro. pr- = blue, gr- = red, cr- = purple, tr- = yellow.'},
+ {f:'O mel vem em "a carton of honey".', v:0, e:'Falso. Essa era uma etiqueta trocada do Workbook. O certo é a jar of honey.'},
+ {f:'"a bag of rice" é um pacote de arroz.', v:1, e:'Verdadeiro. a bag of = um pacote de.'},
+ {f:'"a canton of juice" está escrito certo.', v:0, e:'Falso. É carton: a carton of juice.'},
+ {f:'"a cup of" quer dizer uma xícara de.', v:1, e:'Verdadeiro. Ex.: a cup of coffee.'},
+ {f:'Na tabela da p. 84, o livro deu coffee, tea e hot chocolate como exemplos de "a cup of".', v:1, e:'Verdadeiro. São os exemplos já impressos no livro.'},
+ {f:'There\'s é o jeito curto de escrever There is.', v:1, e:'Verdadeiro. O livro usa os dois: "There is enough salad" e "There\'s too much cheese".'},
+ {f:'"Theres isn\'t any cheese." está certo.', v:0, e:'Falso. Não se junta There\'s com isn\'t: There isn\'t any cheese.'},
+ {f:'"a can of soda" é uma lata de refrigerante.', v:1, e:'Verdadeiro. a can of = uma lata de.'}
+];
+
+// ----- Mini-quiz relâmpago do Resumo -----
+const RELAMPAGO = [
+ ['Complete: ___ some mushrooms.', "There are some mushrooms. (plural)"],
+ ['Complete: ___ any cheese.', "There isn't any cheese."],
+ ['Como se escreve "não há" no plural?', "There aren't (com apóstrofo!)"],
+ ['Too much ou too many: ___ cheese?', "too much cheese (incontável)"],
+ ['Too much ou too many: ___ shish kebabs?', "too many shish kebabs (contável)"],
+ ['Ordem certa: honey / enough', "There's enough honey."],
+ ['Mel vem em...', 'a jar of honey'],
+ ['Caixinha de suco em inglês?', 'a carton of juice (c-a-r-t-o-n)'],
+ ['3 uncountable nouns do caderno', 'water, honey, rice'],
+ ['Palavras com tr no trava-língua', 'trains, traveled, tree']
+];
+
+// ----- Simulado (25 questões; a 1ª alternativa listada é a certa, depois são embaralhadas) -----
+const SIM = [
+ {q:'Complete: "_____ some yogurt."', fala:"There's some yogurt.", o:[["There's",1,'Yogurt é singular e a frase diz que tem: There\'s some yogurt (p. 80).'],['There are','There are é para o plural.'],["There aren't",'Aren\'t é negativo e para o plural.'],["Theres isn't",'Não se junta There\'s com isn\'t, e com some a frase é afirmativa.']]},
+ {q:'Complete: "_____ some nuts."', fala:'There are some nuts.', o:[['There are',1,'Nuts é plural: There are some nuts (p. 80).'],["There's",'Nuts termina em s, é plural: There are.'],["There isn't",'Isn\'t é negativo e para o singular.'],['There arent','Falta o apóstrofo e, com some, a frase é afirmativa.']]},
+ {q:'Complete: "_____ any shish kebabs."', fala:"There aren't any shish kebabs.", o:[["There aren't",1,'Plural + any (não tem) = There aren\'t any shish kebabs.'],["There isn't",'Shish kebabs é plural: aren\'t.'],['There are','Com any, a frase é negativa.'],["There's",'Com any, a frase é negativa, e kebabs é plural.']]},
+ {q:'Qual frase está correta?', fala:"There isn't any cheese.", o:[["There isn't any cheese.",1,'Frase do livro (p. 80): singular + não tem.'],["Theres isn't any cheese.",'Não se junta There\'s com isn\'t.'],["There aren't any cheese.",'Cheese é singular: isn\'t.'],["There isn't some cheese.",'Na negativa usamos any.']]},
+ {q:'Qual é a forma escrita certa?', fala:"There aren't", o:[["There aren't",1,'Aren\'t com apóstrofo entre o n e o t.'],['There arent','Falta o apóstrofo.'],["There are'nt",'Apóstrofo no lugar errado.'],["There AreA'nt",'Escrita errada: o certo é There aren\'t.']]},
+ {q:'Qual palavra está escrita certa (cogumelos, como no livro)?', fala:'mushrooms', o:[['mushrooms',1,'M-U-S-H-R-O-O-M-S, no plural.'],['mushroom','No livro está no plural: mushrooms.'],['mashrooms','É com u: mushrooms.'],['muchrooms','É com sh: mushrooms.']]},
+ {q:'Qual palavra está escrita certa?', fala:'salad', o:[['salad',1,'S-A-L-A-D.'],['sald','Falta o a: salad.'],['salade','Não tem e no fim: salad.'],['sallad','Só um l: salad.']]},
+ {q:'Qual palavra NÃO é countable?', fala:'honey', o:[['honey',1,'Honey é uncountable (caderno): precisa de recipiente para ser medido.'],['apples','Apples é countable: dá para contar.'],['eggs','Eggs é countable: dá para contar.'],['mushrooms','Mushrooms é countable: dá para contar.']]},
+ {q:'Segundo o caderno, por que water, honey e rice são uncountable?', fala:'water, honey, rice', o:[['Porque representam líquidos ou precisam de recipientes para serem medidos',1,'É exatamente a explicação do caderno.'],['Porque podemos usar números antes deles','Isso é dos countable (apples, eggs, mushrooms).'],['Porque estão sempre no plural','Não estão no plural.'],['Porque são comidas doces','Rice e water não são doces. O motivo é: líquidos ou precisam de recipiente.']]},
+ {q:'Complete: "There\'s too _____ cheese."', fala:"There's too much cheese.", o:[['much',1,'Cheese é incontável: too much (p. 81).'],['many','Many é para o que se conta.'],['enough','"too enough" não existe.'],['any','"too any" não existe.']]},
+ {q:'Complete: "There are too _____ sausages."', fala:'There are too many sausages.', o:[['many',1,'Sausages se contam: too many.'],['much','Much é para o que não se conta.'],['to','"too to" não existe.'],['two','Two é o número 2.']]},
+ {q:'Qual frase está escrita certa?', fala:'There are too many sausages.', o:[['There are too many sausages.',1,'Too com dois o e many porque sausages se contam.'],['There are to many sausages.','Falta um o: too.'],['There are two many sausages.','Two é o número 2.'],['There are too much sausages.','Sausages se contam: too many.']]},
+ {q:'Coloque na ordem: aren\'t / kebabs / There / enough', fala:"There aren't enough kebabs.", o:[["There aren't enough kebabs.",1,'Enough vem antes da comida.'],["There aren't kebabs enough.",'Enough não fica no fim.'],["There enough aren't kebabs.",'Primeiro There aren\'t, depois enough.'],["Kebabs aren't there enough.",'A frase começa com There.']]},
+ {q:'Coloque na ordem: isn\'t / cheese / enough / There', fala:"There isn't enough cheese.", o:[["There isn't enough cheese.",1,'There isn\'t + enough + comida.'],["There isn't cheese enough.",'Enough vem antes de cheese.'],["There enough isn't cheese.",'Primeiro There isn\'t, depois enough.'],["Cheese isn't there enough.",'A frase começa com There.']]},
+ {q:'Na história da p. 81, a frase "There\'s too much salad." é:', fala:"There isn't enough salad!", o:[['False, porque na história "There isn\'t enough salad!"',1,'A salada não é demais: ela falta.'],['True, porque tem salada demais','Na história a salada falta.'],['True, porque a salada é suficiente','A salada NÃO é suficiente.'],['False, porque tem queijo de menos','Queijo tem demais ("too much cheese"). O motivo é que a salada falta.']]},
+ {q:'Na tabela da p. 84, quais exemplos o livro já deu para "a cup of"?', fala:'a cup of coffee, tea, hot chocolate', o:[['coffee, tea, hot chocolate',1,'São os exemplos impressos na tabela.'],['water, soda, juice','Esses não são os exemplos impressos para a cup of.'],['rice, honey, cheese','Esses não são os exemplos impressos para a cup of.'],['nuts, eggs, apples','Esses não são os exemplos impressos para a cup of.']]},
+ {q:'"Enough" quer dizer:', fala:'enough', o:[['suficiente',1,'Enough = suficiente (caderno).'],['demais','Demais é too much / too many.'],['nenhum','Nenhum aparece com any na negativa.'],['um pouco de','Não é esse o sentido. Enough = suficiente.']]},
+ {q:'Qual frase segue o modelo do livro sobre a poluição (Workbook p. 53)?', fala:"There's too much pollution.", o:[["There's too much pollution.",1,'Poluição não se conta: There\'s too much.'],['There are too many pollution.','Pollution não se conta: too much.'],["There's too many pollution.",'Many é para o que se conta.'],['There are too much pollution.','Pollution é singular: There\'s.']]},
+ {q:'Na figura do Workbook (p. 53) só há uma árvore, seca. Qual frase combina?', fala:"There aren't enough trees.", o:[["There aren't enough trees.",1,'Faltam árvores: There aren\'t enough trees.'],["There AreA'nt trees.",'Escrita errada e falta o enough.'],['There are too many trees.','Só tem uma árvore!'],["There's too much trees.",'Trees é plural e se conta.']]},
+ {q:'Qual palavra começa com o som tr?', fala:'traveled', o:[['traveled',1,'T-R: traveled.'],['toward','Toward começa com t-o.'],['two','Two começa com t-w.'],['crab','Crab começa com cr.']]},
+ {q:'Complete o grupo do gr: grasshopper, gray, grass, _____', fala:'green', o:[['green',1,'The grasshopper was gray, and the grass was green.'],['crown','Crown é cr.'],['prize','Prize é pr.'],['tree','Tree é tr.']]},
+ {q:'Em "The pretty princess won the prince\'s prize", quantas palavras começam com pr?', fala:"The pretty princess won the prince's prize.", o:[['4',1,'pretty, princess, prince\'s, prize.'],['3','Conte de novo: pretty, princess, prince\'s, prize = 4.'],['2','São 4: pretty, princess, prince\'s, prize.'],['5','"won" e "the" não têm pr. São 4.']]},
+ {q:'Qual combinação está certa (como no livro)?', fala:'a jar of honey', o:[['a jar of honey',1,'Um pote de mel.'],['a carton of honey','Etiqueta trocada do Workbook!'],['a can of honey','A can of é a lata (soda).'],['a bag of honey','A bag of é o pacote (rice).']]},
+ {q:'Qual está escrito certo?', fala:'a carton of juice', o:[['a carton of juice',1,'C-A-R-T-O-N.'],['a canton of juice','Trocou o r por n.'],['a carton juice','Faltou o of.'],['a cartoon of juice','Cartoon é outra palavra.']]},
+ {q:'Na lista de compras (Workbook p. 56), o arroz vem num saco. Como escrever do jeito da lição?', fala:'a bag of rice', o:[['a bag of rice',1,'Embalagem + of + comida: a bag of rice.'],['Rice','A lição pede a embalagem também: a bag of rice.'],['a bottle of rice','Etiqueta trocada do Workbook! Arroz: a bag of.'],['a cup of rice','O arroz da lista está no saco: a bag of rice.']]}
+];
+
+
+// ===================== LÓGICA =====================
+const SLUG = 'ing5piquenique';
+const SEED_LEIT = 23, SEED_SIM = 41, SEED_MAPA = 7;
+const K = { leitura:SLUG+'_leitura_v1', mapa:SLUG+'_mapa_v1', vf:SLUG+'_vf_v1', resumo:SLUG+'_resumo_v1', simulado:SLUG+'_simulado_v1', trilha:SLUG+'_trilha_v1' };
+const CODIGO_PAIS = 'PAIS-77';
+const MEM = {};
+function ler(k){ try{ const v = localStorage.getItem(k); if(v!==null) return JSON.parse(v); }catch(e){} return MEM[k] ? JSON.parse(MEM[k]) : null; }
+function gravar(k,o){ const s = JSON.stringify(o); MEM[k] = s; try{ localStorage.setItem(k,s); }catch(e){} }
+function apagar(k){ delete MEM[k]; try{ localStorage.removeItem(k); }catch(e){} }
+
+// ---------- áudio (inglês americano) ----------
+let vozES = null;
+function escolherVoz(){ try{ const vs = speechSynthesis.getVoices(); vozES = vs.find(v=>v.lang==='en-US') || vs.find(v=>/^en[-_]US/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null; }catch(e){} }
+try{ escolherVoz(); speechSynthesis.onvoiceschanged = escolherVoz; }catch(e){}
+function falar(t){
+  try{ speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = 1; if(vozES) u.voice = vozES; speechSynthesis.speak(u); }
+  catch(e){ abrirModal('<h2>🔇 Áudio indisponível</h2><p>Este navegador não tem voz para ler em inglês. Tente no Chrome ou no Safari.</p>'); }
+}
+document.addEventListener('click', e=>{ const b = e.target.closest('[data-fala]'); if(b){ e.preventDefault(); e.stopPropagation(); falar(b.dataset.fala); } }, true);
+function somBt(t){ return t ? ` <button class="som" data-fala="${esc(t)}" title="Ouvir em inglês">🔊</button>` : ''; }
+
+let S = {};
+function carregar(){
+  S.leitura  = ler(K.leitura)  || {resp:{}, concluido:false};
+  S.mapa     = ler(K.mapa)     || {pecas:{}, concluido:false};
+  S.vf       = ler(K.vf)       || {melhor:null, rodadas:0, historico:[], concluido:false};
+  S.resumo   = ler(K.resumo)   || {maxRolagem:0, concluido:false};
+  S.simulado = ler(K.simulado) || {resp:{}, enviado:false, concluido:false};
+  S.trilha   = ler(K.trilha)   || {liberadoPelosPais:false, liberadoEm:null, vistos:{}, historico:[]};
+  if(!S.trilha.vistos) S.trilha.vistos = {};
+  if(!S.trilha.historico) S.trilha.historico = [];
+}
+function salvar(nome){ S[nome].salvoEm = new Date().toISOString(); gravar(K[nome], S[nome]); atualizarPainel(); renderTrilha(); }
+function concluir(nome){ if(!S[nome].concluido){ S[nome].concluido = true; S[nome].concluidoEm = new Date().toISOString(); } }
+
+// ---------- utilidades ----------
+function hashStr(s){ let h = 2166136261; for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h,16777619); } return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function embaralhar(arr, seed){ const r = mulberry32(seed); const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function dataBR(iso){ if(!iso) return '—'; const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+const $ = id => document.getElementById(id);
+const LETRAS = ['a','b','c','d'];
+
+// ---------- modal ----------
+function abrirModal(html, botoes){
+  const m = $('modal'); m.innerHTML = html + '<div style="margin-top:14px" id="modalBts"></div>';
+  (botoes||[{t:'OK', cls:'btn'}]).forEach(b=>{ const el=document.createElement('button'); el.className=b.cls||'btn'; el.textContent=b.t; el.onclick=()=>{ fecharModal(); if(b.fn) b.fn(); }; $('modalBts').appendChild(el); });
+  $('fundoModal').classList.add('aberto');
+}
+function fecharModal(){ $('fundoModal').classList.remove('aberto'); }
+
+// ---------- trilha ----------
+const ETAPAS = [
+  {id:'leitura', nome:'Leitura Guiada', ic:'📖'},
+  {id:'mapa', nome:'Mapa Mental para encaixar', ic:'🧠'},
+  {id:'vf', nome:'Verdadeiro ou Falso', ic:'✅'},
+  {id:'resumo', nome:'Resumo', ic:'🗺️'},
+  {id:'simulado', nome:'Simulado', ic:'📝'}
+];
+const idxEtapa = id => ETAPAS.findIndex(e=>e.id===id);
+function feito(id){ return !!(S[id] && S[id].concluido); }
+function aberta(i){ if(i<=0) return true; if(S.trilha.liberadoPelosPais) return true; return feito(ETAPAS[i-1].id) || feito(ETAPAS[i].id); }
+const TOTAL_PERG = BLOCOS.reduce((s,b)=>s+b.qs.length,0);
+function blocoFeito(b){ return b.qs.every((q,qi)=>S.leitura.resp[b.id+'_'+qi]); }
+function blocosFeitos(){ return BLOCOS.filter(blocoFeito).length; }
+const PECAS = []; RAMOS.forEach(r=>r.nos.forEach(n=>{ if(Array.isArray(n)) n.forEach(p=>{ if(typeof p==='object') PECAS.push(p); }); }));
+const TOTAL_PECAS = PECAS.length;
+function pecasFeitas(){ return PECAS.filter(p=>S.mapa.pecas[p.id] && S.mapa.pecas[p.id].feita).length; }
+function faltaTexto(i){
+  const ant = ETAPAS[i-1].id;
+  if(ant==='leitura') return `Destrava quando você concluir as ${BLOCOS.length} cestinhas da Leitura Guiada (faltam ${BLOCOS.length-blocosFeitos()}).`;
+  if(ant==='mapa') return `Destrava quando você encaixar as ${TOTAL_PECAS} peças do Mapa Mental (faltam ${TOTAL_PECAS-pecasFeitas()}).`;
+  if(ant==='vf') return 'Destrava quando você jogar uma rodada completa (12 frases) do Verdadeiro ou Falso.';
+  if(ant==='resumo') return 'Destrava quando você ler o Resumo até o fim e clicar em "✅ Li o resumo até o fim".';
+  return '';
+}
+function ehNova(i){ return i>0 && aberta(i) && !feito(ETAPAS[i].id) && !S.trilha.vistos[ETAPAS[i].id]; }
+
+let abaAtual = 'inicio';
+function renderAbas(){
+  const nav = $('abas'); nav.innerHTML = '';
+  const todas = [{id:'inicio', nome:'Início', ic:'🏠'}].concat(ETAPAS);
+  todas.forEach(a=>{
+    const i = idxEtapa(a.id); const b = document.createElement('button');
+    b.innerHTML = `${a.ic} ${a.nome}`; b.dataset.aba = a.id;
+    if(a.id===abaAtual) b.classList.add('ativa');
+    if(i>=0 && !aberta(i)){ b.classList.add('trancada'); b.innerHTML = `🔒 ${a.nome}`; b.title = faltaTexto(i); }
+    else if(i>=0 && feito(a.id)) b.innerHTML += ' <span class="selo">✅</span>';
+    else if(i>=0 && ehNova(i)) b.innerHTML += ' <span class="selo">✨ Novo</span>';
+    b.onclick = ()=>ir(a.id);
+    nav.appendChild(b);
+  });
+}
+function renderTrilha(){
+  const box = $('trilhaCards'); if(!box) return; box.innerHTML = '';
+  if(S.trilha.liberadoPelosPais){ const s=document.createElement('div'); s.className='caixa'; s.innerHTML='🔓 <b>Trilha liberada pelos pais</b> em '+dataBR(S.trilha.liberadoEm); box.appendChild(s); }
+  ETAPAS.forEach((e,i)=>{
+    const b = document.createElement('button'); b.className='etapa'; b.dataset.etapa = e.id;
+    let status;
+    if(!aberta(i)){ b.classList.add('trancada'); status = `<span class="tag lock">🔒 Trancado</span><div class="sub">${faltaTexto(i)}</div>`; }
+    else if(feito(e.id)){ b.classList.add('feita'); status = `<span class="tag ok">✅ Concluído</span><div class="sub">em ${dataBR(S[e.id].concluidoEm)}</div>`; }
+    else if(ehNova(i)){ b.classList.add('nova'); status = `<span class="tag novo">✨ Novo destravado</span>`; }
+    else status = `<span class="sub">${i===0?'Comece por aqui!':'Aberto'}</span>`;
+    b.innerHTML = `<span class="ic">${e.ic}</span><span><b>${i+1}. ${e.nome}</b> ${status}</span>`;
+    b.onclick = ()=>ir(e.id);
+    box.appendChild(b);
+  });
+  renderAbas(); renderProximos();
+}
+function renderProximos(){
+  document.querySelectorAll('[data-proximo]').forEach(bt=>{
+    const i = idxEtapa(bt.dataset.proximo);
+    const ok = aberta(i);
+    bt.disabled = !ok;
+    if(!bt.dataset.rotulo) bt.dataset.rotulo = bt.textContent;
+    bt.textContent = ok ? bt.dataset.rotulo : '🔒 ' + bt.dataset.rotulo.replace(/^\S+\s/,'');
+    bt.title = ok ? '' : faltaTexto(i);
+    bt.onclick = ()=>ir(bt.dataset.proximo);
+  });
+}
+function modalTrancada(i){
+  abrirModal(`<div class="trofeu">🔒</div><h2>Esta etapa ainda está trancada</h2><p>Para abrir <b>${ETAPAS[i].nome}</b>, conclua antes <b>${ETAPAS[i-1].nome}</b>.</p><p>${faltaTexto(i)}</p>`,
+    [{t:'Ir para '+ETAPAS[i-1].nome, cls:'btn', fn:()=>ir(ETAPAS[i-1].id)},{t:'Voltar ao início', cls:'btn claro', fn:()=>ir('inicio')}]);
+}
+function ir(id){
+  const i = idxEtapa(id);
+  if(id!=='inicio' && i<0) id='inicio';
+  if(i>=0 && !aberta(i)){ modalTrancada(i); return; }
+  abaAtual = id;
+  document.querySelectorAll('section.aba').forEach(s=>s.classList.toggle('ativa', s.id==='sec-'+id));
+  if(i>=0 && !S.trilha.vistos[id]){ S.trilha.vistos[id] = new Date().toISOString(); gravar(K.trilha, S.trilha); }
+  renderTrilha();
+  window.scrollTo(0,0);
+  if(id==='resumo') setTimeout(medirRolagem, 300);
+}
+
+// ---------- LEITURA ----------
+const fechados = {};
+function opcoesDe(q, seed){ return embaralhar(q.o.map((o,k)=>Object.assign({k}, o)), seed); }
+function renderLeitura(){
+  const box = $('blocosLeitura'); box.innerHTML = '';
+  let anteriorFeito = true;
+  BLOCOS.forEach((b,j)=>{
+    const liberado = anteriorFeito; const completo = blocoFeito(b);
+    const d = document.createElement('div');
+    d.className = 'card bloco' + (liberado?'':' trancado') + (fechados[b.id]?' fechado':'');
+    d.style.setProperty('--c', b.cor); d.id = 'bloco-'+b.id;
+    let cab = `<div class="cab"><div><h2 style="color:${b.cor}">🧺 ${j+1}. ${b.emoji} ${b.titulo}</h2><div class="sub">${b.tema} · ${b.pag}</div></div><div>${completo?'<span class="tag ok">✅ feita</span>':(liberado?'':'<span class="tag lock">🔒</span>')}</div></div>`;
+    if(!liberado){ d.innerHTML = cab + `<p class="sub">🔒 Abre quando você responder as perguntas da cestinha ${j}.</p>`; box.appendChild(d); anteriorFeito=false; return; }
+    let corpo = `<div class="corpo">${b.html}<div class="caixa">🔑 <b>Palavras importantes:</b> ${b.palavras.join(' · ')}</div><h3>🎯 Responda as ${b.qs.length} perguntas</h3>`;
+    b.qs.forEach((q,qi)=>{
+      const qid = b.id+'_'+qi; const r = S.leitura.resp[qid];
+      const ops = opcoesDe(q, hashStr(qid)+SEED_LEIT);
+      corpo += `<div class="pergunta"><b>${qi+1}) ${q.q}</b><div class="opcoes">`;
+      ops.forEach((o,pi)=>{
+        let cls = 'op';
+        if(r){ if(o.ok) cls+=' certa'; else if(o.k===r.esc) cls+=' errada'; else cls+=' cinza'; }
+        corpo += `<button class="${cls}" ${r?'disabled':''} data-q="${qid}" data-k="${o.k}">${LETRAS[pi]}) ${o.t}</button>`;
+      });
+      corpo += `</div>`;
+      if(r){ const e2 = q.o[r.esc]; const certa = q.o.find(o=>o.ok);
+        corpo += r.ok ? `<div class="fb ok">🎉 ${e2.w}${somBt(q.fala)}</div>` : `<div class="fb no">💭 Quase! ${e2.w}<br>✔️ <b>Resposta certa:</b> ${certa.t} — ${certa.w}${somBt(q.fala)}</div>`; }
+      corpo += `</div>`;
+    });
+    corpo += `</div>`;
+    d.innerHTML = cab + corpo; box.appendChild(d);
+    d.querySelector('.cab').onclick = ()=>{ fechados[b.id] = !fechados[b.id]; d.classList.toggle('fechado'); };
+    anteriorFeito = completo;
+  });
+  box.querySelectorAll('button.op').forEach(bt=>bt.onclick = ()=>responderLeitura(bt.dataset.q, +bt.dataset.k));
+  const resp = Object.keys(S.leitura.resp).length; const acertos = Object.values(S.leitura.resp).filter(r=>r.ok).length;
+  $('barraLeitura').style.width = (resp/TOTAL_PERG*100)+'%';
+  $('txtLeitura').innerHTML = `${resp} de ${TOTAL_PERG} perguntas respondidas · ⭐ ${acertos} acertos · ${blocosFeitos()} de ${BLOCOS.length} pratos na toalha 🧺`;
+  renderToalha();
+  $('fimLeitura').style.display = S.leitura.concluido ? 'block' : 'none';
+}
+function responderLeitura(qid, k){
+  if(S.leitura.resp[qid]) return;
+  const [bid, qi] = qid.split('_'); const b = BLOCOS.find(x=>x.id===bid); const q = b.qs[+qi];
+  S.leitura.resp[qid] = {esc:k, ok:!!q.o[k].ok, em:new Date().toISOString()};
+  const fimAgora = !S.leitura.concluido && Object.keys(S.leitura.resp).length===TOTAL_PERG;
+  if(fimAgora) concluir('leitura');
+  salvar('leitura'); renderLeitura();
+  if(fimAgora) abrirModal('<div class="trofeu">🏆</div><h2>Leitura concluída!</h2><p>Todas as cestinhas foram para a toalha! 🧺 O <b>Mapa Mental</b> foi destravado! ✨</p>', [{t:'🧠 Ir para o Mapa Mental', cls:'btn', fn:()=>ir('mapa')},{t:'Ficar aqui', cls:'btn claro'}]);
+}
+
+function renderToalha(){
+  const v = $('toalha'); if(!v) return;
+  v.innerHTML = BLOCOS.map((b,j)=>`<div class="prato ${blocoFeito(b)?'servido':''}" style="--c:${b.cor}" title="${j+1}. ${b.titulo}"><div class="disco">${b.prato}</div><small>${j+1}</small></div>`).join('');
+}
+
+// ---------- MAPA MENTAL ----------
+function renderMapa(){
+  const box = $('ramosMapa'); box.innerHTML = '';
+  RAMOS.forEach(r=>{
+    const d = document.createElement('div'); d.className='ramo'; d.style.setProperty('--c', r.cor);
+    let h = `<h4>${r.nome}</h4>`;
+    r.nos.forEach(n=>{
+      if(typeof n==='string'){ h += `<div class="no">• ${n}</div>`; return; }
+      h += '<div class="no">• ' + n.map(p=>{
+        if(typeof p==='string') return p;
+        const st = S.mapa.pecas[p.id];
+        if(st && st.feita) return `<span class="lacuna feita"><span class="enc">${p.certa}</span></span>`;
+        const ops = embaralhar([p.certa, p.errada], hashStr(p.id)+SEED_MAPA);
+        return `<span class="lacuna">` + ops.map(o=>`<button data-p="${p.id}" data-v="${esc(o)}">${o}</button>`).join('<span style="align-self:center">ou</span>') + `</span>`;
+      }).join('') + '</div>';
+    });
+    d.innerHTML = h; box.appendChild(d);
+  });
+  box.querySelectorAll('.lacuna button').forEach(bt=>bt.onclick = ()=>encaixar(bt));
+  const f = pecasFeitas();
+  $('contadorMapa').textContent = f===TOTAL_PECAS ? '🧠 Mapa completo!' : `🧩 Mapa: ${f} de ${TOTAL_PECAS} peças encaixadas`;
+  $('mapa').classList.toggle('incompleto', f<TOTAL_PECAS);
+  $('mapa').classList.toggle('completo', f===TOTAL_PECAS);
+  $('mapaFim').style.display = f===TOTAL_PECAS ? 'block' : 'none';
+}
+function encaixar(bt){
+  const p = PECAS.find(x=>x.id===bt.dataset.p); const st = S.mapa.pecas[p.id] || {feita:false, tentou:false};
+  if(bt.dataset.v===p.certa){
+    st.feita = true; st.deprimeira = !st.tentou; st.em = new Date().toISOString(); S.mapa.pecas[p.id] = st;
+    const fimAgora = !S.mapa.concluido && pecasFeitas()===TOTAL_PECAS;
+    if(fimAgora) concluir('mapa');
+    salvar('mapa'); renderMapa();
+    if(fimAgora) abrirModal('<div class="trofeu">🧠</div><h2>Mapa completo!</h2><p>Você montou o mapa inteiro. O <b>Verdadeiro ou Falso</b> foi destravado! ✨</p>', [{t:'✅ Jogar Verdadeiro ou Falso', cls:'btn', fn:()=>ir('vf')},{t:'Ver o mapa', cls:'btn claro'}]);
+  } else {
+    st.tentou = true; S.mapa.pecas[p.id] = st; salvar('mapa');
+    bt.classList.remove('erro'); void bt.offsetWidth; bt.classList.add('erro');
+  }
+}
+
+// ---------- VERDADEIRO OU FALSO ----------
+let rodada = null;
+function novaRodada(){ const idx = embaralhar(VF.map((_,i)=>i), (Math.random()*1e9)>>>0).slice(0,12); rodada = {itens:idx, i:0, acertos:0, respondida:null}; renderVF(); }
+function estrelas(pct){ const n = Math.round(pct/20); return '⭐'.repeat(n) + '☆'.repeat(5-n); }
+function renderVF(){
+  const box = $('vfJogo');
+  if(!rodada){
+    box.innerHTML = `<h2>✅ Verdadeiro ou Falso</h2><p>Vou mostrar <b>12 frases</b> sorteadas sobre a Unit 7. É o jogo <b>Tem ou Não Tem?</b> 🧺 Para cada uma, diga se é <b>Verdadeira</b> ou <b>Falsa</b>. Depois de cada resposta aparece a explicação.</p>
+      ${S.vf.melhor!==null?`<p>🏅 Seu melhor placar: <b>${S.vf.melhor}%</b> ${estrelas(S.vf.melhor)} · rodadas jogadas: ${S.vf.rodadas}</p>`:''}
+      <div style="text-align:center"><button class="btn faisca" id="btVfComecar">▶️ Começar rodada</button></div>`;
+    $('btVfComecar').onclick = novaRodada; return;
+  }
+  if(rodada.i >= rodada.itens.length){
+    const pct = Math.round(rodada.acertos/rodada.itens.length*100);
+    box.innerHTML = `<div class="placar-final"><div class="trofeu">🏆</div><h2>Rodada completa!</h2><p>Você acertou <b>${rodada.acertos} de ${rodada.itens.length}</b> — <b>${pct}%</b></p><p class="estrelas">${estrelas(pct)}</p><p>🏅 Melhor placar: ${S.vf.melhor}%</p>
+      <button class="btn fio" id="btVfDeNovo">🔁 Jogar de novo</button> <button class="btn faisca" id="btVfResumo">🗺️ Agora revise no Resumo!</button></div>`;
+    $('btVfDeNovo').onclick = novaRodada; $('btVfResumo').onclick = ()=>ir('resumo'); return;
+  }
+  const it = VF[rodada.itens[rodada.i]];
+  let h = `<div class="sub">Frase ${rodada.i+1} de ${rodada.itens.length} · ✔️ ${rodada.acertos} acertos</div><div class="barra"><div style="width:${rodada.i/rodada.itens.length*100}%"></div></div>
+    <div class="vf-frase">"${it.f}"</div>`;
+  if(rodada.respondida===null){
+    h += `<div class="vf-bts"><button class="btn" id="btV">👍 Verdadeiro</button><button class="btn faisca" id="btF">👎 Falso</button></div>`;
+    box.innerHTML = h; $('btV').onclick = ()=>responderVF(1); $('btF').onclick = ()=>responderVF(0);
+  } else {
+    const acertou = rodada.respondida===it.v;
+    h += `<div class="fb ${acertou?'ok':'no'}">${acertou?'🎉 Acertou!':'💭 Não foi dessa vez.'} ${it.e}</div><div style="text-align:center;margin-top:10px"><button class="btn fio" id="btVfProx">${rodada.i+1<rodada.itens.length?'➡️ Próxima frase':'🏁 Ver resultado'}</button></div>`;
+    box.innerHTML = h; $('btVfProx').onclick = ()=>{ rodada.i++; rodada.respondida=null; if(rodada.i>=rodada.itens.length) fimRodada(); renderVF(); };
+  }
+}
+function responderVF(v){ const it = VF[rodada.itens[rodada.i]]; rodada.respondida = v; if(v===it.v) rodada.acertos++; renderVF(); }
+function fimRodada(){
+  const pct = Math.round(rodada.acertos/rodada.itens.length*100);
+  S.vf.rodadas = (S.vf.rodadas||0)+1; S.vf.melhor = Math.max(S.vf.melhor||0, pct);
+  S.vf.historico = (S.vf.historico||[]).concat([{pct, em:new Date().toISOString()}]).slice(-20);
+  const primeira = !S.vf.concluido; concluir('vf'); salvar('vf');
+  if(primeira) setTimeout(()=>abrirModal('<div class="trofeu">🗺️</div><h2>Resumo destravado!</h2><p>Agora revise tudo no <b>Resumo</b> antes do Simulado.</p>', [{t:'🗺️ Ir para o Resumo', cls:'btn', fn:()=>ir('resumo')},{t:'Ficar aqui', cls:'btn claro'}]), 200);
+}
+
+// ---------- RESUMO ----------
+function renderResumo(){
+  $('gradeFoods').innerHTML = FOODS.map(f=>`<div class="palavra">${f[0]} ${en(f[1])}<br><span class="sub">= ${f[2]}</span></div>`).join('');
+  $('tabelaThere').innerHTML = `<table class="quadro"><tr><th></th><th>Tem (some)</th><th>Não tem (any)</th></tr>
+    <tr><td class="lado">Singular</td><td>${en("There's some cheese.")}<br><span class="sub">There's = There is</span></td><td>${en("There isn't any cheese.")}</td></tr>
+    <tr><td class="lado">Plural</td><td>${en('There are some mushrooms.')}</td><td>${en("There aren't any shish kebabs.")}</td></tr></table>
+    <div class="regra">📒 Caderno: <b>There is</b> = existe / há — singular · <b>There are</b> = existe / há — plural</div>
+    <div class="alerta">🚨 Apóstrofo sempre: <b>isn't</b>, <b>aren't</b>. Nunca "There arent" nem "Theres isn't".</div>`;
+  $('compContar').innerHTML = `
+    <div class="col" style="--c:#8e5bd0"><h4>🍎 Countable</h4><p class="sub">Dá para usar números antes.</p><ul><li>${en('apples')}</li><li>${en('eggs')}</li><li>${en('mushrooms')}</li></ul><p>➡️ There are · too many</p></div>
+    <div class="col" style="--c:#4a90d9"><h4>💧 Uncountable</h4><p class="sub">Líquidos ou coisas que precisam de recipiente para medir.</p><ul><li>${en('water')}</li><li>${en('honey')}</li><li>${en('rice')}</li></ul><p>➡️ There's · too much</p></div>`;
+  $('tabelaToo').innerHTML = `<table class="quadro"><tr><th>Expressão</th><th>Quer dizer</th><th>Exemplos do livro</th></tr>
+    <tr><td class="lado">too much</td><td>muito / muita (incontáveis)</td><td>${en("There's too much cheese.")}<br>${en("There's too much pollution.")}</td></tr>
+    <tr><td class="lado">too many</td><td>muitos / muitas (contáveis)</td><td>${en('There are too many shish kebabs.')}<br>${en('There are too many sausages.')}</td></tr>
+    <tr><td class="lado">enough</td><td>suficiente (serve para os dois)</td><td>${en("There isn't enough salad.")}<br>${en("There aren't enough mushrooms.")}<br>${en("There's enough honey.")}</td></tr></table>
+    <div class="exemplo">💬 História da p. 81: ${en("Oh, Bouncer! There are too many shish kebabs, and there's too much cheese!")} · ${en("There isn't enough salad!")}</div>
+    <div class="regra">🧩 Sort it out (p. 81): <b>too much</b> → salad, cheese · <b>too many</b> → mushrooms, kebabs · <b>enough</b> → nuts, honey</div>
+    <div class="alerta">🚨 <b>too</b> = dois o · <b>enough</b> vem ANTES da comida: ${en("There aren't enough kebabs.")}</div>`;
+  const CONT = [['🍼','a bottle of water','uma garrafa de'],['🍯','a jar of honey','um pote de'],['🧃','a carton of juice','uma caixa de'],['🥫','a can of soda','uma lata de'],['☕','a cup of coffee','uma xícara de'],['🍚','a bag of rice','um pacote de']];
+  $('gradeContainers').innerHTML = CONT.map(c=>`<div class="palavra">${c[0]} ${en(c[1])}<br><span class="sub">${c[2]}…</span></div>`).join('') +
+    `<div class="palavra">☕ a cup of… ${en('coffee')} ${en('tea')} ${en('hot chocolate')}<br><span class="sub">exemplos da tabela da p. 84</span></div>`;
+  $('phonicsResumo').innerHTML = `<div class="comp">
+    <div class="col" style="--c:#9b59b6"><h4>cr · purple 💜</h4><p>${en('The king crab wore a crown.')}</p><ul><li>${en('crab')}</li><li>${en('crown')}</li></ul></div>
+    <div class="col" style="--c:#c99400"><h4>tr · yellow 💛</h4><p>${en('Two trains traveled toward the tree.')}</p><ul><li>${en('trains')} / ${en('train')}</li><li>${en('traveled')}</li><li>${en('tree')}</li></ul></div>
+    <div class="col" style="--c:#e05a47"><h4>gr · red ❤️</h4><p>${en('The grasshopper was gray, and the grass was green.')}</p><ul><li>${en('grasshopper')}</li><li>${en('gray')}</li><li>${en('grass')}</li><li>${en('green')}</li></ul></div>
+    <div class="col" style="--c:#4a90d9"><h4>pr · blue 💙</h4><p>${en("The pretty princess won the prince's prize.")}</p><ul><li>${en('pretty')}</li><li>${en('princess')}</li><li>${en('prince')}</li><li>${en('prize')}</li></ul></div></div>
+    <div class="alerta">🚨 <b>Two</b> e <b>toward</b> NÃO têm o som tr.</div>`;
+  const POST = [
+    "✅ <b>There aren't</b> — com apóstrofo. Nunca \"There arent\".",
+    "✅ <b>There isn't any cheese</b> — nunca \"Theres isn't\".",
+    "✅ <b>There are some mushrooms</b> — plural pede There are.",
+    "✅ <b>too many</b> — too com dois o. Nunca \"to many\".",
+    "✅ <b>There aren't enough kebabs</b> · <b>There's enough honey</b> — enough antes da comida.",
+    "✅ <b>There aren't enough trees</b> — nunca \"There AreA'nt trees\".",
+    "✅ <b>cheese</b> (dois e) · <b>salad</b> · <b>mushrooms</b> · <b>shish kebabs</b>",
+    "✅ <b>a carton of juice</b> — c-a-r-t-o-n. Nunca \"canton\".",
+    "✅ <b>a jar of honey</b> — mel vai no pote, não na caixinha.",
+    "✅ Lista de compras: <b>a bag of rice</b>, não só \"Rice\"."
+  ];
+  $('postits').innerHTML = POST.map(t=>`<div class="postit">${t}</div>`).join('');
+  const PAL = [['neighborhood','bairro'],['pollution','poluição'],['litter','lixo'],['trees','árvores'],['cars','carros'],['stores','lojas'],['parks','parques'],['supermarkets','supermercados'],['movie theaters','cinemas'],['flowers','flores'],['some','tem (frases afirmativas)'],['any','nenhum (frases negativas)'],['countable','contável'],['uncountable','incontável'],['enough','suficiente'],['shopping list','lista de compras']];
+  $('gradePalavras').innerHTML = PAL.map(p=>`<div class="palavra">${en(p[0])}<br><span class="sub">= ${p[1]}</span></div>`).join('');
+  $('relampago').innerHTML = RELAMPAGO.map((r,i)=>`<button class="op" data-r="${i}">⚡ ${r[0]}</button><div class="resp-oculta" id="rel${i}">👉 ${r[1]}</div>`).join('');
+  document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ const el=$('rel'+b.dataset.r); el.style.display = el.style.display==='block'?'none':'block'; });
+  atualizarBotaoResumo();
+}
+function medirRolagem(){
+  if(abaAtual!=='resumo') return;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = h<=0 ? 100 : Math.min(100, Math.round(window.scrollY/h*100));
+  if(pct > (S.resumo.maxRolagem||0)){ S.resumo.maxRolagem = pct; salvar('resumo'); }
+  atualizarBotaoResumo();
+}
+function atualizarBotaoResumo(){
+  const bt = $('btLiResumo'); const pode = S.resumo.concluido || (S.resumo.maxRolagem||0) >= 90;
+  bt.disabled = !pode || S.resumo.concluido;
+  bt.textContent = S.resumo.concluido ? '✅ Resumo lido!' : '✅ Li o resumo até o fim';
+  $('txtLiResumo').textContent = S.resumo.concluido ? 'Concluído em '+dataBR(S.resumo.concluidoEm)+'. O Simulado está aberto!' : (pode ? 'Pode clicar!' : 'O botão acende quando você chegar ao fim da página.');
+}
+function liResumo(){
+  if(S.resumo.concluido) return;
+  concluir('resumo'); salvar('resumo'); atualizarBotaoResumo();
+  abrirModal('<div class="trofeu">📝</div><h2>Simulado destravado!</h2><p>Agora é hora de mostrar o que aprendeu. Good luck, jovem aprendiz!</p>', [{t:'📝 Ir para o Simulado', cls:'btn', fn:()=>ir('simulado')},{t:'Revisar mais um pouco', cls:'btn claro'}]);
+}
+
+// ---------- SIMULADO ----------
+function opsSim(qi){ const q = SIM[qi]; const base = q.o.map((o,k)=>({k, t:o[0], ok:o.length===3, w:o.length===3?o[2]:o[1]})); return embaralhar(base, hashStr('sim'+qi)+SEED_SIM); }
+function renderSimulado(){
+  const box = $('questoesSim'); box.innerHTML = '';
+  SIM.forEach((q,qi)=>{
+    const d = document.createElement('div'); d.className = 'card';
+    const r = S.simulado.resp[qi];
+    let h = `<b>Questão ${qi+1}.</b> ${q.q}<div class="opcoes" style="margin-top:8px">`;
+    opsSim(qi).forEach((o,pi)=>{
+      let cls='op'; if(r===o.k) cls+=' sel';
+      if(S.simulado.enviado){ cls='op'+(o.ok?' certa':(r===o.k?' errada':' cinza')); }
+      h += `<button class="${cls}" ${S.simulado.enviado?'disabled':''} data-sq="${qi}" data-k="${o.k}">${LETRAS[pi]}) ${o.t}</button>`;
+    });
+    d.innerHTML = h + '</div>'; box.appendChild(d);
+  });
+  if(!S.simulado.enviado) box.querySelectorAll('[data-sq]').forEach(b=>b.onclick=()=>{ S.simulado.resp[b.dataset.sq] = +b.dataset.k; salvar('simulado'); renderSimulado(); });
+  const n = Object.keys(S.simulado.resp).length;
+  $('barraSim').style.width = (n/SIM.length*100)+'%';
+  $('txtSim').textContent = S.simulado.enviado ? `Enviado em ${dataBR(S.simulado.enviadoEm)}` : `${n} de ${SIM.length} respondidas`;
+  $('envioSim').style.display = S.simulado.enviado ? 'none' : 'block';
+  renderResultado();
+}
+function gerarCodigo(ac){ const L='ABCDEFGHJKLMNPQRSTUVWXYZ'; const r=()=>L[Math.floor(Math.random()*L.length)]; return `SIM-${String(ac).padStart(2,'0')}-${r()}${r()}`; }
+function enviarSim(){
+  const falta = SIM.map((_,i)=>i).filter(i=>S.simulado.resp[i]===undefined);
+  if(falta.length){ abrirModal(`<div class="trofeu">✏️</div><h2>Ainda faltam ${falta.length} questões</h2><p>Responda as questões: <b>${falta.map(i=>i+1).join(', ')}</b>.</p>`); return; }
+  abrirModal('<h2>Enviar o Simulado?</h2><p>Depois de enviar, não dá para mudar as respostas.</p>', [{t:'📨 Enviar', cls:'btn faisca', fn:confirmarEnvio},{t:'Revisar antes', cls:'btn claro'}]);
+}
+function confirmarEnvio(){
+  let ac = 0; SIM.forEach((q,qi)=>{ if(q.o[S.simulado.resp[qi]].length===3) ac++; });
+  S.simulado.acertos = ac; S.simulado.enviado = true; S.simulado.enviadoEm = new Date().toISOString();
+  if(!S.simulado.codigo) S.simulado.codigo = gerarCodigo(ac);
+  concluir('simulado'); salvar('simulado'); renderSimulado();
+  setTimeout(()=>{ const el=$('resultadoSim'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 100);
+}
+function renderResultado(){
+  const box = $('resultadoSim');
+  if(!S.simulado.enviado){ box.innerHTML=''; return; }
+  const ac = S.simulado.acertos; const pct = Math.round(ac/SIM.length*100);
+  let h = `<div class="card placar-final"><div class="trofeu">${pct>=70?'🏆':'💪'}</div><h2>Você acertou ${ac} de ${SIM.length} (${pct}%)</h2><p class="estrelas">${estrelas(pct)}</p>
+    <p>${pct>=70?'Great job! Mandou muito bem!':'Continue treinando: releia o Resumo e confira o gabarito abaixo.'}</p>
+    <p>Seu código para os pais: <b style="font-size:1.3em;color:var(--pipa2)">${S.simulado.codigo}</b></p></div>
+    <div class="card"><h2>📗 Gabarito comentado</h2><p class="sub">A certa aparece em verde. As outras aparecem em cinza, com a explicação do erro. A sua resposta tem contorno azul. Toque no 🔊 para ouvir em inglês. O gabarito também está no <a href="gabarito_simulado.html" target="_blank">arquivo separado</a>.</p>`;
+  SIM.forEach((q,qi)=>{
+    const r = S.simulado.resp[qi]; const ops = opsSim(qi); const acertou = q.o[r].length===3;
+    h += `<div class="gab-q"><b>${acertou?'✅':'❌'} Questão ${qi+1}.</b> ${q.q}${somBt(q.fala)}`;
+    ops.forEach((o,pi)=>{ h += `<div class="gab-op ${o.ok?'certa':'cinza'} ${r===o.k?'marcada':''}">${o.ok?'✔️':'✖️'} <b>${LETRAS[pi]}) ${o.t}</b>${r===o.k?' <i>(sua resposta)</i>':''}<br><span>${o.w}</span></div>`; });
+    h += `</div>`;
+  });
+  box.innerHTML = h + '</div>';
+}
+
+// ---------- PAINEL / RELATÓRIO / EXPORTAR ----------
+function atualizarPainel(){
+  const datas = ['leitura','mapa','vf','resumo','simulado'].map(n=>S[n]&&S[n].salvoEm).filter(Boolean).sort();
+  const el = $('painelSalvar'); if(el) el.textContent = datas.length ? `Progresso salvo neste aparelho. Último salvamento: ${dataBR(datas[datas.length-1])}` : 'Seu progresso é salvo sozinho neste aparelho.';
+}
+function abrirRelatorio(){
+  const cod = $('codPais').value.trim().toUpperCase(); const area = $('areaPais');
+  const ehPais = cod===CODIGO_PAIS; const ehSim = S.simulado.codigo && cod===S.simulado.codigo;
+  if(!ehPais && !ehSim){ area.innerHTML = '<p class="fb no">Código não reconhecido. Use o código do Simulado (SIM-…) ou o código da família.</p>'; return; }
+  const resp = Object.values(S.leitura.resp); const lAc = resp.filter(r=>r.ok).length;
+  const errLeit = []; BLOCOS.forEach(b=>b.qs.forEach((q,qi)=>{ const r=S.leitura.resp[b.id+'_'+qi]; if(r && !r.ok) errLeit.push(b.titulo+' – '+q.q.replace(/<[^>]+>/g,'')); }));
+  const pecasPrim = PECAS.filter(p=>S.mapa.pecas[p.id] && S.mapa.pecas[p.id].feita && S.mapa.pecas[p.id].deprimeira).length;
+  const errSim = S.simulado.enviado ? SIM.map((q,qi)=>q.o[S.simulado.resp[qi]].length===3?null:qi+1).filter(Boolean) : [];
+  let h = `<table class="rel"><tr><th>Material</th><th>Resultado</th></tr>
+   <tr><td>📖 Leitura Guiada</td><td>${resp.length} de ${TOTAL_PERG} respondidas · ${lAc} acertos de primeira${errLeit.length?'<br><span class="sub">Errou: '+errLeit.join('; ')+'</span>':''}</td></tr>
+   <tr><td>🧠 Mapa Mental</td><td>${pecasFeitas()} de ${TOTAL_PECAS} peças encaixadas · <b>Mapa Mental: ${pecasPrim} de ${TOTAL_PECAS} peças encaixadas de primeira</b></td></tr>
+   <tr><td>✅ Verdadeiro ou Falso</td><td>${S.vf.melhor!==null?'Melhor placar: '+S.vf.melhor+'% · rodadas: '+S.vf.rodadas:'Ainda não jogou'}</td></tr>
+   <tr><td>🗺️ Resumo</td><td>Rolagem máxima: ${S.resumo.maxRolagem||0}% · ${S.resumo.concluido?'marcou "li até o fim"':'não marcou "li até o fim"'}</td></tr>
+   <tr><td>📝 Simulado</td><td>${S.simulado.enviado?`${S.simulado.acertos} de ${SIM.length} (${Math.round(S.simulado.acertos/SIM.length*100)}%) · código ${S.simulado.codigo}${errSim.length?'<br><span class="sub">Errou as questões: '+errSim.join(', ')+'</span>':''}`:'Ainda não enviado'}</td></tr>
+   <tr><td>🛤️ Trilha</td><td>${ETAPAS.map(e=>`${e.ic} ${e.nome}: ${feito(e.id)?'✅ concluída em '+dataBR(S[e.id].concluidoEm):'⏳ não concluída'}`).join('<br>')}
+     <br>${S.trilha.liberadoPelosPais?'🔓 Trilha liberada pelos pais em '+dataBR(S.trilha.liberadoEm):'🔒 Trilha não liberada pelos pais'}
+     ${S.trilha.historico.length?'<br><span class="sub">Histórico: '+S.trilha.historico.map(x=>x.acao+' em '+dataBR(x.em)).join('; ')+'</span>':''}</td></tr></table>`;
+  if(ehPais){
+    h += S.trilha.liberadoPelosPais
+      ? `<p class="caixa">🔓 <b>Trilha liberada pelos pais</b></p><button class="btn claro" id="btTrancar">🔒 Trancar de novo</button>`
+      : `<button class="btn fio" id="btLiberar">🔓 Liberar todos os materiais</button>`;
+  }
+  area.innerHTML = h;
+  if($('btLiberar')) $('btLiberar').onclick = ()=>{ S.trilha.liberadoPelosPais=true; S.trilha.liberadoEm=new Date().toISOString(); S.trilha.historico.push({acao:'liberou', em:S.trilha.liberadoEm}); gravar(K.trilha,S.trilha); renderTrilha(); abrirRelatorio(); };
+  if($('btTrancar')) $('btTrancar').onclick = ()=>{ S.trilha.liberadoPelosPais=false; S.trilha.historico.push({acao:'trancou de novo', em:new Date().toISOString()}); gravar(K.trilha,S.trilha); renderTrilha(); abrirRelatorio(); };
+}
+function exportar(){
+  const dados = {kit:SLUG, titulo:'Piquenique Xadrez — Inglês 5º ano', exportadoEm:new Date().toISOString(), leitura:S.leitura, mapa:S.mapa, vf:S.vf, resumo:S.resumo, simulado:S.simulado, trilha:S.trilha};
+  const blob = new Blob([JSON.stringify(dados,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'progresso_piquenique_xadrez.json'; document.body.appendChild(a); a.click(); a.remove();
+}
+function importar(arq){
+  const fr = new FileReader();
+  fr.onload = ()=>{ try{ const d = JSON.parse(fr.result); if(d.kit!==SLUG) throw 0;
+      ['leitura','mapa','vf','resumo','simulado','trilha'].forEach(n=>{ if(d[n]) gravar(K[n], d[n]); });
+      carregar(); renderTudo(); abrirModal('<h2>📤 Progresso importado!</h2>');
+    }catch(e){ abrirModal('<h2>Arquivo não reconhecido</h2><p>Escolha o arquivo exportado deste kit.</p>'); } };
+  fr.readAsText(arq);
+}
+function zerarTudo(){
+  abrirModal('<h2>🗑️ Zerar tudo?</h2><p>Todo o progresso deste kit será apagado neste aparelho.</p>', [{t:'Sim, zerar', cls:'btn faisca', fn:()=>{ Object.values(K).forEach(apagar); carregar(); rodada=null; renderTudo(); ir('inicio'); }},{t:'Cancelar', cls:'btn claro'}]);
+}
+
+function renderTudo(){ renderLeitura(); renderMapa(); renderVF(); renderResumo(); renderSimulado(); atualizarPainel(); renderTrilha(); }
+function iniciar(){
+  carregar(); renderTudo();
+  $('btExportar').onclick = exportar; $('btImportar').onclick = ()=>$('arqImportar').click();
+  $('arqImportar').onchange = e=>{ if(e.target.files[0]) importar(e.target.files[0]); e.target.value=''; };
+  $('btZerar').onclick = zerarTudo; $('btRelatorio').onclick = abrirRelatorio;
+  $('codPais').addEventListener('keydown', e=>{ if(e.key==='Enter') abrirRelatorio(); });
+  $('btLiResumo').onclick = liResumo; $('btEnviarSim').onclick = enviarSim;
+  window.addEventListener('scroll', ()=>{ if(abaAtual==='resumo') medirRolagem(); }, {passive:true});
+  window.addEventListener('hashchange', ()=>{ const h = location.hash.replace('#',''); if(h) ir(h); });
+  const h0 = location.hash.replace('#',''); ir(h0 || 'inicio');
+}
+iniciar();
+</script>
+</body>
+</html>
